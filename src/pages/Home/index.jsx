@@ -1,8 +1,12 @@
-import React from 'react';
+import { useEffect } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import HomeContent from '../../components/HomeContent';
 
 const Home = () => {
+  useEffect(() => {
+    document.title = "Accueil - Portail Web GI"
+  }, [])
+
   return (
     <MainLayout 
       component={<HomeContent />}
@@ -10,7 +14,7 @@ const Home = () => {
   );
 }
 
-export default Home
+export default Home;
 
 
 
