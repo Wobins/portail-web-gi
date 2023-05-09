@@ -21,7 +21,8 @@ const HomeContent = () => {
                         title="Communiques"
                         description="Tous les cours du departement, pour toutes les filieres et tous les niveaux"
                         qty={45}
-                    />
+                        link="communiques"
+                        />
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={5} >
@@ -37,7 +38,8 @@ const HomeContent = () => {
                         title="Cours"
                         description="Tous les cours du departement, pour toutes les filieres et tous les niveaux"
                         qty={45}
-                    />
+                        link="cours"
+                        />
                     </Paper>
                 </Grid>
             </Grid>
@@ -45,48 +47,51 @@ const HomeContent = () => {
                 <Grid item xs={12} md={4} >
                 <Paper
                     sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
                     }}
-                >
+                    >
                     <BlockResource
-                    title="Lexique"
-                    description="Un lexique riche avec toutes les expresions et mots de l'actualite tech"
-                    qty={124}
-                    />
+                        title="Lexique"
+                        description="Un lexique riche avec toutes les expresions et mots de l'actualite tech"
+                        qty={124}
+                        link="lexique"
+                        />
                 </Paper>
                 </Grid>
                 <Grid item xs={12} md={4} >
                 <Paper
                     sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
                     }}
-                >
+                    >
                     <BlockResource
-                    title="Entreprises"
-                    description="Plusieurs conatcts d'entreprises repertoriees pour faciliter vos demandes d'emploi et de stage"
-                    qty={45}
-                    />
+                        title="Entreprises"
+                        description="Plusieurs conatcts d'entreprises repertoriees pour faciliter vos demandes d'emploi et de stage"
+                        qty={45}
+                        link="entreprises"
+                        />
                 </Paper>
                 </Grid>
                 <Grid item xs={12} md={4} >
                 <Paper
                     sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 240,
                     }}
-                >
+                    >
                     <BlockResource
-                    title="Enseignants"
-                    description="Une equipe d'enseignants et chercheurs prets a vous aider"
-                    qty={23}
+                        title="Enseignants"
+                        description="Une equipe d'enseignants et chercheurs prets a vous aider"
+                        qty={23}
+                        link="enseignants"
                     />
                 </Paper>
                 </Grid>              

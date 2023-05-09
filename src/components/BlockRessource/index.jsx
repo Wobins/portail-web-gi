@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Title from '../Title/';
 
@@ -8,7 +8,7 @@ function preventDefault(event) {
 }
 
 const BlockRessource = (props) => {
-  const { title, qty, description } = props;
+  const { title, qty, description, link } = props;
   return (
     <React.Fragment>
       <Title>{title}</Title>
@@ -19,7 +19,8 @@ const BlockRessource = (props) => {
         {description}
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
+        {/* <Link to={`/${link}`} *color="primary" onClick={preventDefault}*}> */}
+        <Link to={`/${link}`}>
           Acceder
         </Link>
       </div>
