@@ -1,5 +1,5 @@
-import React from 'react';
-import { Divider, Button, } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Divider, Button, Box, TextField, } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 const rows = [
@@ -22,27 +22,94 @@ const columns = [
 ];
 
 const TeachersContent = () => {
+    const [showForm, setShowForm] = useState(false);
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        document.title = "Enseignants";
+    }, []);
+
+    const handleAddBtn = () => {
+        setShowForm(true);
+    }
+    const handleUndoBtn = () => {
+        setShowForm(false);
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setShowForm(false);
+        console.log("hello from teachers");
+    }
+
     return (
         <>
             <h1>Enseignants</h1>
-            <Divider variant='inset' />
+            <Divider />
 
             <div className='mt-5' style={{ width: '100%' }}>
-                <div className="text-end my-3">
-                    <Button variant="contained" color="error">Supprimer</Button>
-                    <Button variant="contained" color="success" className='ms-2'>Ajouter</Button>
-                </div>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                        },
-                    }}
-                    pageSizeOptions={[5, 10, 15, 20, 25]}
-                    checkboxSelection
-                />
+                {
+                    showForm ? (
+                        <>
+                            <div className=" my-3">
+                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
+                                    Annuler
+                                </Button>
+                            </div>
+                            <div className="row">
+                                <div className="col-lg-6 offset-lg-3">
+                                    <Box
+                                        component="form"
+                                        // sx={{
+                                        //     '& > :not(style)': { m: 1, width: '25ch' },
+                                        // }}
+                                        noValidate
+                                        autoComplete="off"
+                                    >
+                                        <div className='mb-3'>
+                                            <TextField fullWidth id="fullName" label="Nom complet" variant="outlined" />
+                                        </div>
+                                        <div className='mb-3'>
+                                            <TextField fullWidth id="email" type='email' label="Email" variant="outlined" />
+                                        </div>
+                                        <div className='mb-3'>
+                                            <TextField fullWidth id="phone" type='phone' label="Telephone" variant="outlined" />
+                                        </div>
+                                        <Button 
+                                            fullWidth 
+                                            variant='contained' 
+                                            type='submit'
+                                            onClick={handleSubmit}
+                                        >
+                                            Enregistrer
+                                        </Button>
+                                    </Box>
+                                </div>
+                            </div>
+                        </>
+                        
+                    ) : (
+                        <>
+                            <div className="text-end my-3">
+                                <Button variant="contained" color="error">Supprimer</Button>
+                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                    Ajouter
+                                </Button>
+                            </div>
+                            
+                            <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: { page: 0, pageSize: 5 },
+                                    },
+                                }}
+                                pageSizeOptions={[5, 10, 15, 20, 25]}
+                                checkboxSelection
+                            />
+                        </>
+                    )
+                }
             </div>
         </>
     );
