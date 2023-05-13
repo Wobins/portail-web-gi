@@ -3,6 +3,8 @@ import Home from "./pages/Home";
 import Teachers from "./pages/Teachers";
 import Courses from "./pages/Courses";
 import Definitions from "./pages/Definitions"
+import PressReleases from "./pages/PressReleases";
+import Enterprises from "./pages/Enterprises";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "lexique",
     element: <Definitions />,
+  },
+  {
+    path: "entreprises",
+    element: <Enterprises />,
+  },
+  {
+    path: "communiques",
+    element: <PressReleases />,
   },
 ]);
 
