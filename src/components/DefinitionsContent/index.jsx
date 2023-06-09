@@ -8,27 +8,78 @@ import {
     Typography, 
     TextField,
     Box,
+    CircularProgress
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { getDefinitions, addDefinition, deleteDefinition } from '../../api/definitionAPI';
 
 const DefinitionsContent = () => {
     const [showForm, setShowForm] = useState(false);
+    const [definitions, setDefinitions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isToModify, setIsToModify] = useState(false);
+    const [formData, setFormData] = useState({
+        term: "",
+        meaning: ""
+    })
 
     useEffect(() => {
         document.title = "Lexique";
     }, []);
 
+    useEffect(() => {
+        const get_definitions = async () => {
+            const definitionsFromServer = await fetchDefinitions();
+            setDefinitions(definitionsFromServer);
+        }
+    
+        get_definitions();
+    }, [showForm, definitions]);
+
+    useEffect(() => {
+        setIsLoading(true); 
+        setTimeout(() => {
+          setIsLoading(false); // Finish loading after a delay
+        }, 2000);
+    }, []);
+      
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [name]: value,
+        }));
+    };
     const handleAddBtn = () => {
         setShowForm(true);
-    }
+    };
     const handleUndoBtn = () => {
         setShowForm(false);
-    }
-    const handleSubmit = (e) => {
+    };
+    const handleDelete = (itemId) => {
+        deleteDefinition(itemId)
+          .then(() => {
+            setDefinitions(prevItems => prevItems.filter(item => item.id !== itemId));
+          })
+          .catch(error => {
+            console.error('Error deleting item:', error);
+          });
+    };
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const res = await addDefinition(formData);
+        console.log(res.data)
+        setFormData({
+            term: "",
+            meaning: ""
+        })
         setShowForm(false);
-        console.log("hello from courses");
-    }
+    };
+    const fetchDefinitions = async () => {
+        const res = await getDefinitions();
+        const data = res.data;
+        return data;
+    };
 
     return (
         <>
@@ -48,23 +99,34 @@ const DefinitionsContent = () => {
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
                                         component="form"
-                                        // sx={{
-                                        //     '& > :not(style)': { m: 1, width: '25ch' },
-                                        // }}
-                                        noValidate
                                         autoComplete="off"
+                                        onSubmit={handleSubmit}
                                     >
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="defID" label="Mot ou expression" />
+                                            <TextField 
+                                                required fullWidth 
+                                                id="term" 
+                                                label="Mot ou expression" 
+                                                name='term'
+                                                value={formData.term}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="definition" label="Definition" multiline rows={5} />
+                                            <TextField 
+                                                required fullWidth multiline 
+                                                id="definition" 
+                                                label="Definition" 
+                                                rows={5} 
+                                                name='meaning'
+                                                value={formData.meaning}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                         <Button 
                                             fullWidth 
                                             variant='contained' 
                                             type='submit'
-                                            onClick={handleSubmit}
                                         >
                                             Enregistrer
                                         </Button>
@@ -79,41 +141,40 @@ const DefinitionsContent = () => {
                                     Ajouter
                                 </Button>
                             </div>
-                            
-                            <Accordion className=''>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Blockchain </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                    </Typography>
-                                    <div className="text-end">
-                                        <Button variant="contained" size='small' color="error">Supprimer</Button>
-                                        <Button variant="contained" size='small' color="warning" className='ms-2'>Modifier</Button>
-                                    </div>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Cryptographie</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
+
+                            {isLoading ? (
+                                <div className="text-center py-5">
+                                    <CircularProgress /> 
+                                </div>
+                            ) : (
+                                definitions.map((def) => (
+                                    <Accordion className='' key={def.id}>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id={def.id}
+                                        >
+                                            <Typography className=''>{def.term} </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography>
+                                                {def.meaning}
+                                            </Typography>
+                                            <div className="text-end">
+                                                <Button 
+                                                    variant="contained" 
+                                                    size='small' 
+                                                    color="error"
+                                                    onClick={() => handleDelete(def.id)}
+                                                >
+                                                    Supprimer
+                                                </Button>
+                                                <Button variant="contained" size='small' color="warning" className='ms-2'>Modifier</Button>
+                                            </div>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                ))
+                            )}
                         </>
                     )
                 }

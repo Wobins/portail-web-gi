@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { FileUploader } from '@aws-amplify/ui-react';
+import { columns } from '../../utils/coursesColumns';
+import { getCourses } from '../../api/courseAPI'
 
 const rows = [
     { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
@@ -14,20 +17,10 @@ const rows = [
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-const columns = [
-    { field: 'id', headerName: 'ID', width: 150 },
-    { field: 'firstName', headerName: 'Code EC', width: 250 },
-    { field: 'lastName', headerName: 'Intitule', width: 150 },
-    {field: 'annee', headerName: 'Annee scolaire', type: 'number', width: 150},
-    {field: 'age', headerName: 'Actions', type: 'number', width: 150},
-];
 
 const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
-
-    useEffect(() => {
-        document.title = "Cours";
-    }, []);
+    const [courses, setCourses] = useState([]);
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -40,6 +33,22 @@ const CoursesContent = () => {
         setShowForm(false);
         console.log("hello from courses");
     }
+    const fetchCourses = async () => {
+        const res = await getCourses();
+        const data = res.data;
+        return data;
+    }
+    
+    useEffect(() => {
+        document.title = "Entreprises";
+
+        const get_courses = async () => {
+            const courses = await fetchCourses();
+            setCourses(courses);
+        }
+    
+        get_courses();
+    }, []);
 
     return (
         <>
@@ -72,7 +81,14 @@ const CoursesContent = () => {
                                             <TextField fullWidth id="title" label="Intitule" />
                                         </div>
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="description" label="Description" multiline rows={5} />
+                                            <TextField fullWidth id="description" label="Annee academique" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <FileUploader
+                                                acceptedFileTypes={['.doc', '.docx', '.pdf', '.xls']}
+                                                accessLevel="public"
+                                                maxFileCount={1}
+                                            />
                                         </div>
                                         <Button 
                                             fullWidth 
@@ -95,7 +111,7 @@ const CoursesContent = () => {
                                 </Button>
                             </div>
                             <DataGrid
-                                rows={rows}
+                                rows={courses}
                                 columns={columns}
                                 initialState={{
                                     pagination: {

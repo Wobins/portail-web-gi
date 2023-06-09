@@ -3,8 +3,8 @@ import url from "../utils/url";
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
-export function getCourses () {
-    return axios.get(`${url}/courses`, {
+export function getCompanies () {
+    return axios.get(`${url}/companies`, {
         headers: {
             "Content-Type": "application/json",
             'Access-Control-Allow-Origin': '*'
@@ -12,8 +12,8 @@ export function getCourses () {
     });
 }
 
-export function getCourse (id) {
-    return axios.get(`${url}/courses/${id}`, {
+export function getCompany (id) {
+    return axios.get(`${url}/companies/${id}`, {
         headers: {
             "Content-Type": "application/json",
             'Access-Control-Allow-Origin': '*'
@@ -21,17 +21,17 @@ export function getCourse (id) {
     });
 }
 
-export function addCourse (course) {
-    return axios.post(`${url}/courses/`, course, {
+export function addCompany (company) {
+    return axios.post(`${url}/companies/`, company, {
         headers: {
             "Content-Type": "application/json",
-            'Access-Control-Allow-Origin': '*'
+            // 'Access-Control-Allow-Origin': '*'
         }
     });
 }
 
-export function deleteCourse (id) {
-    return axios.delete(`${url}/courses/${id}`, {
+export function deleteCompany (id) {
+    return axios.delete(`${url}/companies/${id}`, {
         headers: {
             "Content-Type": "application/json",
             'Access-Control-Allow-Origin': '*'

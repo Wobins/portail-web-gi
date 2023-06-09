@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Link } from 'react-router-dom';
+import AccountMenu from '../../components/AccountMenu'
 import { listItems } from '../../utils/listItems';
 import Copyright from '../../components/Copyright';
 import drawer from '../../utils/Drawer';
@@ -22,8 +24,12 @@ const MainLayout = (props) => {
     const Drawer = drawer;
     const AppBar = appBar;
     const mdTheme = createTheme();
-
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -51,18 +57,22 @@ const MainLayout = (props) => {
                 <MenuIcon />
                 </IconButton>
                 <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                sx={{ flexGrow: 1 }}
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                    sx={{ flexGrow: 1 }}
                 >
-                Portail GI LOGO
+                    <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
                 </Typography>
                 <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                    <NotificationsIcon />
-                </Badge>
+                    <AccountMenu 
+                        anchorEl={anchorElUser}
+                        isLoggedIn={true}
+                        opened={Boolean(anchorElUser)}
+                        onClose={handleCloseUserMenu}
+                        onClick={handleCloseUserMenu}
+                    />
                 </IconButton>
             </Toolbar>
             </AppBar>

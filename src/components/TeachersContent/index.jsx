@@ -1,45 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, } from '@mui/material';
+import { 
+    Divider, Button, Box, TextField, FormControl, FormLabel, Radio, RadioGroup, FormControlLabel 
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { getTeachers, addTeacher } from '../../api/teacherAPI';
+import generateUniqueId from '../../utils/generateUniqueId';
+import teachersColumns from '../../utils/teachersColumns';
 
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
-
-const columns = [
-    { field: 'id', headerName: 'ID', width: 150 },
-    { field: 'firstName', headerName: 'Nom complet', width: 250 },
-    { field: 'lastName', headerName: 'Email', width: 150 },
-    {field: 'age', headerName: 'Telephone', type: 'number', width: 150},
-];
 
 const TeachersContent = () => {
     const [showForm, setShowForm] = useState(false);
-    const [data, setData] = useState(null);
-
-    useEffect(() => {
-        document.title = "Enseignants";
-    }, []);
-
+    const [teachers, setTeachers] = useState([]);
+    const [teachersData, setTeachersData] = useState({
+        id: generateUniqueId(),
+        name: "",
+        phone: "",
+        email: "",
+        status: "",
+        isManager: false
+    });
+    
     const handleAddBtn = () => {
         setShowForm(true);
     }
     const handleUndoBtn = () => {
         setShowForm(false);
     }
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setTeachersData({ ...teachersData, [name]: value });
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
+        addTeacher(teachersData)
+        .then((res) => {
+            console.log(res.data);
+        }).catch(e => console.log(e))
         setShowForm(false);
         console.log("hello from teachers");
     }
+
+    const fetchTeachers = async () => {
+        const res = await getTeachers();
+        const data = res.data;
+        return data;
+    }
+    
+    useEffect(() => {
+        document.title = "Enseignants";
+    }, []);
+
+    useEffect(() => {
+        const get_teachers = async () => {
+            const teachers = await fetchTeachers();
+            setTeachers(teachers);
+        }
+    
+        get_teachers();
+    }, [showForm, teachers]);
 
     return (
         <>
@@ -59,26 +77,71 @@ const TeachersContent = () => {
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
                                         component="form"
+                                        onSubmit={handleSubmit}
                                         // sx={{
                                         //     '& > :not(style)': { m: 1, width: '25ch' },
                                         // }}
-                                        noValidate
+                                        // noValidate
                                         autoComplete="off"
                                     >
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="fullName" label="Nom complet" variant="outlined" />
+                                            <TextField 
+                                                fullWidth 
+                                                id="fullName" 
+                                                name="fullName" 
+                                                label="Nom complet" 
+                                                value={teachersData.name}
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="email" type='email' label="Email" variant="outlined" />
+                                            <TextField 
+                                                fullWidth 
+                                                id="email" 
+                                                name="email"
+                                                label="Email" 
+                                                type='email' 
+                                                value={teachersData.email} 
+                                                onChange={handleChange}
+                                            />
                                         </div>
                                         <div className='mb-3'>
-                                            <TextField fullWidth id="phone" type='phone' label="Telephone" variant="outlined" />
+                                            <TextField 
+                                                fullWidth 
+                                                id="phone" 
+                                                type='phone' 
+                                                label="Telephone" 
+                                                value={teachersData.phone}
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <FormControl>
+                                                <FormLabel id="demo-row-radio-buttons-group-label">
+                                                    Chef de departement
+                                                </FormLabel>
+                                                <RadioGroup
+                                                    row
+                                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                                    name="row-radio-buttons-group"
+                                                    value={teachersData.isManager}
+                                                >
+                                                    <FormControlLabel 
+                                                        value={true} 
+                                                        control={<Radio />} 
+                                                        label="Oui" 
+                                                    />
+                                                    <FormControlLabel 
+                                                        value={false} 
+                                                        control={<Radio />} 
+                                                        label="Non" 
+                                                    />
+                                                </RadioGroup>
+                                            </FormControl>
                                         </div>
                                         <Button 
                                             fullWidth 
                                             variant='contained' 
                                             type='submit'
-                                            onClick={handleSubmit}
                                         >
                                             Enregistrer
                                         </Button>
@@ -97,8 +160,8 @@ const TeachersContent = () => {
                             </div>
                             
                             <DataGrid
-                                rows={rows}
-                                columns={columns}
+                                rows={teachers}
+                                columns={teachersColumns}
                                 initialState={{
                                     pagination: {
                                         paginationModel: { page: 0, pageSize: 5 },
