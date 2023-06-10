@@ -180,7 +180,7 @@ const DefinitionsContent = () => {
                                                     component={Link}
                                                     to={`${def.id}`}
                                                 >
-                                                    Modifier
+                                                    Voir
                                                 </Button>
                                             </div>
                                         </AccordionDetails>
