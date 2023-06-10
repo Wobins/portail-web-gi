@@ -11,6 +11,7 @@ import {
     CircularProgress
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Link } from 'react-router-dom';
 import { getDefinitions, addDefinition, deleteDefinition } from '../../api/definitionAPI';
 
 const DefinitionsContent = () => {
@@ -67,13 +68,15 @@ const DefinitionsContent = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await addDefinition(formData);
-        console.log(res.data)
-        setFormData({
-            term: "",
-            meaning: ""
-        })
-        setShowForm(false);
+        try {
+            const res = await addDefinition(formData);
+            const { data } = res;
+            console.log(data);
+            setShowForm(false);
+            setFormData({term: "", meaning: ""});
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     };
     const fetchDefinitions = async () => {
         const res = await getDefinitions();
@@ -144,7 +147,7 @@ const DefinitionsContent = () => {
 
                             {isLoading ? (
                                 <div className="text-center py-5">
-                                    <CircularProgress /> 
+                                    <CircularProgress /> Chargement des elements ...
                                 </div>
                             ) : (
                                 definitions.map((def) => (
@@ -169,7 +172,16 @@ const DefinitionsContent = () => {
                                                 >
                                                     Supprimer
                                                 </Button>
-                                                <Button variant="contained" size='small' color="warning" className='ms-2'>Modifier</Button>
+                                                <Button 
+                                                    variant="contained" 
+                                                    size='small' 
+                                                    color="warning" 
+                                                    className='ms-2'
+                                                    component={Link}
+                                                    to={`${def.id}`}
+                                                >
+                                                    Modifier
+                                                </Button>
                                             </div>
                                         </AccordionDetails>
                                     </Accordion>

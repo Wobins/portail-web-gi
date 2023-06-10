@@ -30,35 +30,41 @@ const AccountMenu = (props) => {
         >
             {
                 isLoggedIn ? (
-                    <>
-                        <MenuItem onClick={onClose}>
+                    [{action: "Parametres", url: "/parametres"}, {action: "Se deconnecter", url: "/inscription"}].map((el, index) => (
+                        <MenuItem onClick={onClose} key={index}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>
-                            <Link to="/parametres">Parametres</Link>
+                            <Link to={el.url}>{el.action}</Link>
                         </MenuItem>
-                        <MenuItem onClick={onClose}>
-                            <ListItemIcon>
-                                <Logout fontSize="small" />
-                            </ListItemIcon>
-                            Se deconnecter
-                        </MenuItem>
-                    </>
+                    ))
+                        // <MenuItem onClick={onClose}>
+                        //     <ListItemIcon>
+                        //         <Settings fontSize="small" />
+                        //     </ListItemIcon>
+                        //     <Link to="/parametres">Parametres</Link>
+                        // </MenuItem>
+                        // <MenuItem onClick={onClose}>
+                        //     <ListItemIcon>
+                        //         <Logout fontSize="small" />
+                        //     </ListItemIcon>
+                        //     Se deconnecter
+                        // </MenuItem>
                 ) : (
-                    <>
-                        <MenuItem onClick={onClose}>
-                            <ListItemIcon>
-                                <Login fontSize="small" />
-                            </ListItemIcon>
-                            <Link to="/connexion">Se connecter</Link>
-                        </MenuItem>
-                        <MenuItem onClick={onClose}>
-                            <ListItemIcon>
-                                <PersonAdd fontSize="small" />
-                            </ListItemIcon>
-                            <Link to="/inscription">S'inscrire</Link>
-                        </MenuItem>
-                    </>
+                        [{action: "Se connecter", url: "/connexion"}, {action: "S'inscrire", url: "/inscription"}].map((el, index) => (
+                            <MenuItem onClick={onClose} key={index}>
+                                <ListItemIcon>
+                                    <Login fontSize="small" />
+                                </ListItemIcon>
+                                <Link to={el.url}>{el.action}</Link>
+                            </MenuItem>
+                        ))
+                        // <MenuItem onClick={onClose}>
+                        //     <ListItemIcon>
+                        //         <PersonAdd fontSize="small" />
+                        //     </ListItemIcon>
+                        //     <Link to="/inscription">S'inscrire</Link>
+                        // </MenuItem>
                 )
 
             }

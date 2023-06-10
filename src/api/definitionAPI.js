@@ -37,3 +37,11 @@ export function deleteDefinition (id) {
         }
     });
 }
+
+export function updateDefinition (id, definition) {
+    return axios.put(`${url}/definitions/${id}/`, definition, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
