@@ -57,10 +57,9 @@ const DefinitionContent = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
         try {
-            const res = await updateDefinition(id,formData);
-            console.log(res.data);
+            const res = await updateDefinition(id, formData);
+            console.log(res);
         } catch (error) {
             console.error('Error updating item:', error);
         }

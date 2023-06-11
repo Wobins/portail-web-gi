@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^4.6.4",
+    "@emailjs/browser": "^3.11.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.11.16",
@@ -15,6 +16,7 @@
     "aws-amplify": "^5.2.4",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
