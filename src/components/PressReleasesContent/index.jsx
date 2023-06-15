@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField } from '@mui/material';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
+import { SearchField } from '@aws-amplify/ui-react';
 import PDFViewer from '../PDFViewer';
 import { getCommunications } from '../../api/pressAPI';
+import searchArray from '../../utils/searchArray';
 
 
 const PressReleasesContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [communications, setCommunications] = useState([]);
+    const [query, setQuery] = useState('');
+
+    const onChange = (event) => {
+      setQuery(event.target.value);
+    };  
+    const onClear = () => {
+      setQuery('');
+    };
+    const searchCourse = (tab) => {
+        let newTab = tab.filter(el => (
+            query.toLowerCase() === "" ? el : (el.label + el.code + el.added_at + el.school_year).toLowerCase().includes(query)
+        ));
+        return newTab;  
+    }
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -94,22 +110,38 @@ const PressReleasesContent = () => {
                         </>
                     ) : (
                         <>
+                            <SearchField
+                                label="Search"
+                                placeholder="Filtrer par date, EC, ou initule ..."
+                                hasSearchButton={false}
+                                hasSearchIcon={true}
+                                labelHidden={true}
+                                onChange={onChange}
+                                onClear={onClear}
+                                value={query}
+                            />
+
                             <div className="text-end my-3">
                                 <Button variant="contained" color="error">Supprimer</Button>
                                 <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
                                     Ajouter
                                 </Button>
                             </div>
-
                             <div className="row">
                                 {
-                                    communications.map((el, index) => {
-                                        <div className="col-lg-4 col-md-6">
+                                    searchArray(query, communications).map((el, index) => (
+                                        <div className="col-lg-4 col-md-6" key={index}>
                                             <div className="container">
-                                                <PDFViewer />
+                                                <PDFViewer
+                                                    url={el.url}
+                                                    label={el.label}
+                                                    code={el.code}
+                                                    school_year={el.school_year}
+                                                    added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
+                                                />
                                             </div>
                                         </div>
-                                    })
+                                    ))
                                 }
                             </div>
                         </>

@@ -20,7 +20,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 
-const PDFViewer = ({url, code, label, school_year}) => {
+const PDFViewer = ({url, code, label, school_year, added_at}) => {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
   
@@ -50,7 +50,7 @@ const PDFViewer = ({url, code, label, school_year}) => {
                 </div>
                 <div>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom align='right'>
-                    Ajoute il ya 2 jours
+                    {added_at}
                 </Typography>
                 </div>
             </CardContent>

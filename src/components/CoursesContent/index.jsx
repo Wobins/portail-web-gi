@@ -3,6 +3,7 @@ import { Divider, Button, Box, TextField } from '@mui/material';
 import { SearchField } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import PDFViewer from '../PDFViewer';
+import searchArray from '../../utils/searchArray';
 import { getCourses } from '../../api/courseAPI'
 
 
@@ -17,12 +18,12 @@ const CoursesContent = () => {
     const onClear = () => {
       setQuery('');
     };
-    const searchCourse = (tab) => {
-        let newTab = tab.filter(el => (
-            query.toLowerCase() === "" ? el : (el.label + el.code).toLowerCase().includes(query)
-        ));
-        return newTab;  
-    }
+    // const searchCourse = (tab) => {
+    //     let newTab = tab.filter(el => (
+    //         query.toLowerCase() === "" ? el : (el.label + el.code).toLowerCase().includes(query)
+    //     ));
+    //     return newTab;  
+    // }
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -113,7 +114,7 @@ const CoursesContent = () => {
                         <>
                             <SearchField
                                 label="Search"
-                                placeholder="Search here..."
+                                placeholder="Filtrer par date, EC, ou initule ..."
                                 hasSearchButton={false}
                                 hasSearchIcon={true}
                                 labelHidden={true}
@@ -130,7 +131,7 @@ const CoursesContent = () => {
                             </div>
                             <div className="row">
                                 {
-                                    searchCourse(courses).map((el, index) => (
+                                    searchArray(query, courses).map((el, index) => (
                                         <div className="col-lg-4 col-md-6" key={index}>
                                             <div className="container">
                                                 <PDFViewer
@@ -138,6 +139,7 @@ const CoursesContent = () => {
                                                     label={el.label}
                                                     code={el.code}
                                                     school_year={el.school_year}
+                                                    added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
                                                 />
                                             </div>
                                         </div>
