@@ -108,11 +108,7 @@ const MainLayout = (props) => {
                 >
                 <Toolbar />
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                        <SubscriptionDialog
-                            // open={openDialog}
-                            // onClose={handleCloseDialog}
-                            // onSubscribe={handleSubscribe}
-                        />
+                        <SubscriptionDialog />
                         { component }
                         <Copyright sx={{ pt: 4 }} />
                     </Container>

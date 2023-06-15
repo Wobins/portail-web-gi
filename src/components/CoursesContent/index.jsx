@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import { FileUploader } from '@aws-amplify/ui-react';
-import { columns } from '../../utils/coursesColumns';
+import { SearchField } from '@aws-amplify/ui-react';
+import { StorageManager } from '@aws-amplify/ui-react-storage';
+import PDFViewer from '../PDFViewer';
 import { getCourses } from '../../api/courseAPI'
-
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
 
 
 const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [courses, setCourses] = useState([]);
+    const [query, setQuery] = useState('');
+
+    const onChange = (event) => {
+      setQuery(event.target.value);
+    };  
+    const onClear = () => {
+      setQuery('');
+    };
+    const searchCourse = (tab) => {
+        let newTab = tab.filter(el => (
+            query.toLowerCase() === "" ? el : (el.label + el.code).toLowerCase().includes(query)
+        ));
+        return newTab;  
+    }
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -68,9 +70,6 @@ const CoursesContent = () => {
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
                                         component="form"
-                                        // sx={{
-                                        //     '& > :not(style)': { m: 1, width: '25ch' },
-                                        // }}
                                         noValidate
                                         autoComplete="off"
                                     >
@@ -84,10 +83,18 @@ const CoursesContent = () => {
                                             <TextField fullWidth id="description" label="Annee academique" />
                                         </div>
                                         <div className="mb-3">
-                                            <FileUploader
+                                            <StorageManager
                                                 acceptedFileTypes={['.doc', '.docx', '.pdf', '.xls']}
                                                 accessLevel="public"
                                                 maxFileCount={1}
+                                                path='/courses'
+                                                displayText={{
+                                                    dropFilesText: 'Porter et deposer ici ou',
+                                                    browseFilesText: 'Ouvrir l\'explorateur',
+                                                    getFilesUploadedText(count) {
+                                                      return `${count} documents téléversés`;
+                                                    },
+                                                }}
                                             />
                                         </div>
                                         <Button 
@@ -104,23 +111,39 @@ const CoursesContent = () => {
                         </>
                     ) : (
                         <>
+                            <SearchField
+                                label="Search"
+                                placeholder="Search here..."
+                                hasSearchButton={false}
+                                hasSearchIcon={true}
+                                labelHidden={true}
+                                onChange={onChange}
+                                onClear={onClear}
+                                value={query}
+                            />
+
                             <div className="text-end my-3">
                                 <Button variant="contained" color="error">Supprimer</Button>
                                 <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
                                     Ajouter
                                 </Button>
                             </div>
-                            <DataGrid
-                                rows={courses}
-                                columns={columns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: { page: 0, pageSize: 5 },
-                                    },
-                                }}
-                                pageSizeOptions={[5, 10, 15, 20, 25]}
-                                checkboxSelection
-                            />
+                            <div className="row">
+                                {
+                                    searchCourse(courses).map((el, index) => (
+                                        <div className="col-lg-4 col-md-6" key={index}>
+                                            <div className="container">
+                                                <PDFViewer
+                                                    url={el.url}
+                                                    label={el.label}
+                                                    code={el.code}
+                                                    school_year={el.school_year}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
                         </>
                     )
                 }              

@@ -25,19 +25,37 @@ const TeachersContent = () => {
     }
     const handleUndoBtn = () => {
         setShowForm(false);
+        setTeachersData({
+            id: generateUniqueId(),
+            name: "",
+            phone: "",
+            email: "",
+            status: "",
+            isManager: false
+        });
     }
     const handleChange = e => {
         const { name, value } = e.target;
         setTeachersData({ ...teachersData, [name]: value });
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        addTeacher(teachersData)
-        .then((res) => {
-            console.log(res.data);
-        }).catch(e => console.log(e))
-        setShowForm(false);
-        console.log("hello from teachers");
+        try {
+            const res = await addTeacher(teachersData);
+            const { data } = res;
+            console.log(data);
+            setShowForm(false);
+            setTeachersData({
+                id: generateUniqueId(),
+                name: "",
+                phone: "",
+                email: "",
+                status: "",
+                isManager: false
+            });
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     }
 
     const fetchTeachers = async () => {
@@ -78,17 +96,13 @@ const TeachersContent = () => {
                                     <Box
                                         component="form"
                                         onSubmit={handleSubmit}
-                                        // sx={{
-                                        //     '& > :not(style)': { m: 1, width: '25ch' },
-                                        // }}
-                                        // noValidate
                                         autoComplete="off"
                                     >
                                         <div className='mb-3'>
                                             <TextField 
                                                 fullWidth 
                                                 id="fullName" 
-                                                name="fullName" 
+                                                name="name" 
                                                 label="Nom complet" 
                                                 value={teachersData.name}
                                                 onChange={handleChange}
@@ -108,10 +122,22 @@ const TeachersContent = () => {
                                         <div className='mb-3'>
                                             <TextField 
                                                 fullWidth 
+                                                id="status" 
+                                                name="status"
+                                                label="Statut" 
+                                                value={teachersData.status} 
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className='mb-3'>
+                                            <TextField 
+                                                fullWidth 
                                                 id="phone" 
+                                                name='phone'
                                                 type='phone' 
                                                 label="Telephone" 
                                                 value={teachersData.phone}
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="mb-3">

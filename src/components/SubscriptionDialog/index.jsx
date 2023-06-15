@@ -22,7 +22,7 @@ const SubscriptionDialog = () => {
     };
     const handleSubscribe = async (e) => {
         e.preventDefault();
-        Cookies.set('subscribed', 'yes', { expires: 365 })
+        Cookies.set('subscribed', true, { expires: 365 })
         const res = await createSubscription({email: email});
         if (res.status === 201) {
             emailjs.sendForm('service_pw6faxk', 'template_r86fzfc', subscriptionForm.current, 'err_HFhc-K3m1OQFM')
@@ -36,6 +36,7 @@ const SubscriptionDialog = () => {
     };
     const handleCloseDialog = () => {
         setOpenDialog(false);
+        Cookies.set('isVisiting', true)
     };
     const handleChange = (event) => {
         setEmail(event.target.value);
@@ -43,7 +44,12 @@ const SubscriptionDialog = () => {
 
     useEffect(() => {
         let subscriptionCookies = Cookies.get('subscribed');
-        !subscriptionCookies && handleOpenDialog();
+        let trackingCookies = Cookies.get('isVisiting');
+        if (trackingCookies) {
+            setOpenDialog(false);
+        } else {
+            !subscriptionCookies && handleOpenDialog();
+        }
     }, []);
 
     return (
@@ -72,7 +78,7 @@ const SubscriptionDialog = () => {
                     autoFocus required fullWidth
                     margin="dense"
                     id="subscription-email"
-                    label="Email Address"
+                    label="Email"
                     type="email"
                     name="email"
                     value={email}
@@ -83,7 +89,6 @@ const SubscriptionDialog = () => {
             <DialogActions>
                 <Button onClick={handleCloseDialog}>Cancel</Button>
                 <Button type='submit'>Subscribe</Button>
-                {/* <Button onClick={onSubscribe} type='submit'>Subscribe</Button> */}
             </DialogActions>
         </Dialog>
     );

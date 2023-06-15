@@ -15,7 +15,7 @@ const EnterprisesContent = () => {
         industry: "",
         email: "",
         website: ""
-    })
+    });
 
     
     const handleAddBtn = () => {
@@ -23,24 +23,6 @@ const EnterprisesContent = () => {
     }
     const handleUndoBtn = () => {
         setShowForm(false);
-    }
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setCompanyData({ ...companyData, [name]: value });
-    }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // setShowForm(false);
-        // let id;
-        // const uniqueID = generateUniqueId();
-        // setCompanyData({...companyData, [id]: uniqueID});
-        // const companyData_string = JSON.stringify(companyData);
-        const res = await addCompany(companyData)
-        const {data} = res;
-        console.log(data)
-    }
-
-    const resetForm = () => {
         setCompanyData({
             id: generateUniqueId(),
             name: "",
@@ -48,7 +30,28 @@ const EnterprisesContent = () => {
             email: "",
             website: ""
         });
-        setShowForm(false)
+    }
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setCompanyData({ ...companyData, [name]: value });
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await addCompany(companyData);
+            const { data } = res;
+            console.log(data);
+            setShowForm(false);
+            setCompanyData({
+                id: generateUniqueId(),
+                name: "",
+                industry: "",
+                email: "",
+                website: ""
+            });
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     }
 
     // Fetch companies
@@ -85,9 +88,6 @@ const EnterprisesContent = () => {
                                     <Box
                                         component="form"
                                         onSubmit={handleSubmit}
-                                        // sx={{
-                                        //     '& > :not(style)': { m: 1, width: '25ch' },
-                                        // }}
                                         noValidate
                                         autoComplete="off"
                                     >
