@@ -38,18 +38,6 @@ const AccountMenu = (props) => {
                             <Link to={el.url}>{el.action}</Link>
                         </MenuItem>
                     ))
-                        // <MenuItem onClick={onClose}>
-                        //     <ListItemIcon>
-                        //         <Settings fontSize="small" />
-                        //     </ListItemIcon>
-                        //     <Link to="/parametres">Parametres</Link>
-                        // </MenuItem>
-                        // <MenuItem onClick={onClose}>
-                        //     <ListItemIcon>
-                        //         <Logout fontSize="small" />
-                        //     </ListItemIcon>
-                        //     Se deconnecter
-                        // </MenuItem>
                 ) : (
                         [{action: "Se connecter", url: "/connexion"}, {action: "S'inscrire", url: "/inscription"}].map((el, index) => (
                             <MenuItem onClick={onClose} key={index}>
@@ -59,12 +47,6 @@ const AccountMenu = (props) => {
                                 <Link to={el.url}>{el.action}</Link>
                             </MenuItem>
                         ))
-                        // <MenuItem onClick={onClose}>
-                        //     <ListItemIcon>
-                        //         <PersonAdd fontSize="small" />
-                        //     </ListItemIcon>
-                        //     <Link to="/inscription">S'inscrire</Link>
-                        // </MenuItem>
                 )
 
             }

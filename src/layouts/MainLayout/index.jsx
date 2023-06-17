@@ -9,7 +9,9 @@ import {
     Divider,
     IconButton,
     Container,
+    Avatar
 } from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link } from 'react-router-dom';
@@ -31,6 +33,9 @@ const MainLayout = (props) => {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -46,14 +51,14 @@ const MainLayout = (props) => {
                         }}
                     >
                         <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer}
-                        sx={{
-                            marginRight: '36px',
-                            ...(open && { display: 'none' }),
-                        }}
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={toggleDrawer}
+                            sx={{
+                                marginRight: '36px',
+                                ...(open && { display: 'none' }),
+                            }}
                         >
                         <MenuIcon />
                         </IconButton>
@@ -66,7 +71,22 @@ const MainLayout = (props) => {
                         >
                             <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
                         </Typography>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit"
+                            onClick={handleOpenUserMenu}
+                            size="large"
+                            sx={{ ml: 2, p: 0 }}
+                            aria-label="account of current user"
+                            aria-controls={Boolean(anchorElUser) ? 'account-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={Boolean(anchorElUser) ? 'true' : undefined}
+                        >
+                            {
+                                true ? (
+                                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                                ) : (
+                                    <AccountCircle sx={{ width: 32, height: 32 }} />
+                                )
+                            }
                             <AccountMenu 
                                 anchorEl={anchorElUser}
                                 isLoggedIn={true}
