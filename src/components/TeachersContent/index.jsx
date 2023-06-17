@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
-    Divider, Button, Box, TextField, FormControl, FormLabel, Radio, RadioGroup, FormControlLabel 
+    Divider, 
+    CircularProgress,
+    Button, 
+    Box, 
+    TextField, 
+    Select,
+    InputLabel,
+    MenuItem,
+    FormControl, FormLabel, Radio, RadioGroup, FormControlLabel 
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { getTeachers, addTeacher } from '../../api/teacherAPI';
@@ -11,6 +19,7 @@ import teachersColumns from '../../utils/teachersColumns';
 const TeachersContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [teachers, setTeachers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [teachersData, setTeachersData] = useState({
         id: generateUniqueId(),
         name: "",
@@ -72,6 +81,7 @@ const TeachersContent = () => {
         const get_teachers = async () => {
             const teachers = await fetchTeachers();
             setTeachers(teachers);
+            setIsLoading(false);
         }
     
         get_teachers();
@@ -120,14 +130,23 @@ const TeachersContent = () => {
                                             />
                                         </div>
                                         <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="status" 
-                                                name="status"
-                                                label="Statut" 
-                                                value={teachersData.status} 
-                                                onChange={handleChange}
-                                            />
+                                            <FormControl fullWidth>
+                                                <InputLabel id="status">Statut</InputLabel>
+                                                <Select
+                                                    labelId="status"
+                                                    id="status-id"
+                                                    name="status"
+                                                    label="Statut" 
+                                                    value={teachersData.status} 
+                                                    onChange={handleChange}
+                                                >
+                                                <MenuItem value="MC">MC</MenuItem>
+                                                <MenuItem value="CC">CC</MenuItem>
+                                                <MenuItem value="ASS">ASS</MenuItem>
+                                                <MenuItem value="VAC">VAC</MenuItem>
+                                                <MenuItem value="VAC Pro">VAC Pro</MenuItem>
+                                                </Select>
+                                            </FormControl>
                                         </div>
                                         <div className='mb-3'>
                                             <TextField 
@@ -184,18 +203,26 @@ const TeachersContent = () => {
                                     Ajouter
                                 </Button>
                             </div>
-                            
-                            <DataGrid
-                                rows={teachers}
-                                columns={teachersColumns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: { page: 0, pageSize: 5 },
-                                    },
-                                }}
-                                pageSizeOptions={[5, 10, 15, 20, 25]}
-                                checkboxSelection
-                            />
+                            {
+                                isLoading ? (
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                        <CircularProgress />
+                                        <span className="m-2">En cours de chargement ...</span>
+                                    </div>
+                                ) : (
+                                    <DataGrid
+                                        rows={teachers}
+                                        columns={teachersColumns}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: { page: 0, pageSize: 5 },
+                                            },
+                                        }}
+                                        pageSizeOptions={[5, 10, 15, 20, 25]}
+                                        checkboxSelection
+                                    />
+                                )
+                            }
                         </>
                     )
                 }

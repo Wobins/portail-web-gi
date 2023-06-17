@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
+import {
+    Box,
+    Toolbar,
+    List,
+    Typography,
+    Divider,
+    IconButton,
+    Container,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import Copyright from '../../components/Copyright';
 import AccountMenu from '../../components/AccountMenu'
 import SubscriptionDialog from '../../components/SubscriptionDialog';
@@ -106,12 +107,12 @@ const MainLayout = (props) => {
                         overflow: 'auto',
                     }}
                 >
-                <Toolbar />
-                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                    <Toolbar />
+                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} style={{flex: 1}}>
                         <SubscriptionDialog />
                         { component }
-                        <Copyright sx={{ pt: 4 }} />
                     </Container>
+                    <Copyright sx={{ pt: 4 }} />
                 </Box>
             </Box>
         </ThemeProvider>

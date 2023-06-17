@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { addCompany, getCompanies } from '../../api/companyAPI';
-import { Divider, Button, Box, TextField } from '@mui/material';
+import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { addCompany, getCompanies } from '../../api/companyAPI';
 import generateUniqueId from '../../utils/generateUniqueId';
 import companiesColumns from '../../utils/companiesColumns';
 
@@ -9,6 +9,7 @@ import companiesColumns from '../../utils/companiesColumns';
 const EnterprisesContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [companies, setCompanies] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [companyData, setCompanyData] = useState({
         id: generateUniqueId(),
         name: "",
@@ -69,6 +70,7 @@ const EnterprisesContent = () => {
         const get_companies = async () => {
             const companiesFromServer = await fetchCompanies();
             setCompanies(companiesFromServer);
+            setIsLoading(false);
         }
     
         get_companies();
@@ -159,18 +161,27 @@ const EnterprisesContent = () => {
                                     Ajouter
                                 </Button>
                             </div>
-                            <DataGrid
-                                rows={companies}
-                                columns={companiesColumns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: { page: 0, pageSize: 25 },
-                                    },
-                                }}
-                                pageSizeOptions={[10, 15, 20, 25]}
-                                checkboxSelection
-                                // style={{height: "50vh", width: "60vw"}}
-                            />
+                            {
+                                isLoading ? (
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                        <CircularProgress />
+                                        <span className="m-2">En cours de chargement ...</span>
+                                    </div>
+                                ) : (
+                                    <DataGrid
+                                        rows={companies}
+                                        columns={companiesColumns}
+                                        initialState={{
+                                            pagination: {
+                                                paginationModel: { page: 0, pageSize: 25 },
+                                            },
+                                        }}
+                                        pageSizeOptions={[10, 15, 20, 25]}
+                                        checkboxSelection
+                                        // style={{height: "50vh", width: "60vw"}}
+                                    />
+                                )
+                            }
                         </>
                     )
                 }              

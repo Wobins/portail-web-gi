@@ -1,15 +1,8 @@
 import axios from "axios";
 import url from "../utils/url";
 
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-
 export function getCompanies () {
-    return axios.get(`${url}/companies`, {
-        headers: {
-            "Content-Type": "application/json",
-            'Access-Control-Allow-Origin': '*'
-        }
-    });
+    return axios.get(`${url}/companies`);
 }
 
 export function getCompany (id) {

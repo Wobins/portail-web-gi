@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Title from '../Title/';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const BlockRessource = (props) => {
   const { title, qty, description, link } = props;
@@ -19,7 +16,6 @@ const BlockRessource = (props) => {
         {description}
       </Typography>
       <div>
-        {/* <Link to={`/${link}`} *color="primary" onClick={preventDefault}*}> */}
         <Link to={`/${link}`}>
           Acceder
         </Link>

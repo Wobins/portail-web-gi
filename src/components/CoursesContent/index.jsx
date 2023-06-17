@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField } from '@mui/material';
+import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
 import { SearchField } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import PDFViewer from '../PDFViewer';
@@ -11,6 +11,7 @@ const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [courses, setCourses] = useState([]);
     const [query, setQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     const onChange = (event) => {
       setQuery(event.target.value);
@@ -18,12 +19,6 @@ const CoursesContent = () => {
     const onClear = () => {
       setQuery('');
     };
-    // const searchCourse = (tab) => {
-    //     let newTab = tab.filter(el => (
-    //         query.toLowerCase() === "" ? el : (el.label + el.code).toLowerCase().includes(query)
-    //     ));
-    //     return newTab;  
-    // }
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -48,6 +43,7 @@ const CoursesContent = () => {
         const get_courses = async () => {
             const courses = await fetchCourses();
             setCourses(courses);
+            setIsLoading(false);
         }
     
         get_courses();
@@ -131,19 +127,26 @@ const CoursesContent = () => {
                             </div>
                             <div className="row">
                                 {
-                                    searchArray(query, courses).map((el, index) => (
-                                        <div className="col-lg-4 col-md-6" key={index}>
-                                            <div className="container">
-                                                <PDFViewer
-                                                    url={el.url}
-                                                    label={el.label}
-                                                    code={el.code}
-                                                    school_year={el.school_year}
-                                                    added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
-                                                />
-                                            </div>
+                                    isLoading ? (
+                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                            <CircularProgress />
+                                            <span className='m-2'>En cours de chargement ...</span>
                                         </div>
-                                    ))
+                                    ) : (
+                                        searchArray(query, courses).map((el, index) => (
+                                            <div className="col-lg-4 col-md-6" key={index}>
+                                                <div className="container">
+                                                    <PDFViewer
+                                                        url={el.url}
+                                                        label={el.label}
+                                                        code={el.code}
+                                                        school_year={el.school_year}
+                                                        added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))
+                                    )
                                 }
                             </div>
                         </>
