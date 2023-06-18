@@ -13,12 +13,15 @@ import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
+// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+// pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
 // ).toString();
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.min.js';
+
 
 
 const PDFViewer = ({url, code, label, school_year, added_at}) => {
