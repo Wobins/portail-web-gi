@@ -35,7 +35,7 @@ const AccountMenu = (props) => {
                             <ListItemIcon>
                                 <Settings fontSize="small" />
                             </ListItemIcon>
-                            <Link to={el.url}>{el.action}</Link>
+                            {el.action}
                         </MenuItem>
                     ))
                 ) : (
@@ -44,7 +44,7 @@ const AccountMenu = (props) => {
                                 <ListItemIcon>
                                     <Login fontSize="small" />
                                 </ListItemIcon>
-                                <Link to={el.url}>{el.action}</Link>
+                                {el.action}
                             </MenuItem>
                         ))
                 )

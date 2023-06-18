@@ -1,0 +1,8 @@
+.success-alert {
+    position: fixed;
+    z-index: 1000;
+    right: 50px;
+    bottom: 50px;
+    min-width: 350px;
+    width: 35%;
+}
