@@ -6,7 +6,6 @@ import {
     CardContent,
     Typography 
 } from '@mui/material';
-import { Document, Page } from 'react-pdf';
 import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
