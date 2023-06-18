@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import createSubscription from '../../api/subscriptionAPI';
+import './styles.css'
 
 const SubscriptionDialog = () => {
     const subscriptionForm = useRef();
@@ -99,7 +100,11 @@ const SubscriptionDialog = () => {
             </Dialog>
 
             {
-                showAlert && <Alert className='success-alert' severity="success">This is a success alert — check it out!</Alert>
+                showAlert && (
+                    setTimeout(() => {
+                        <Alert className='success-alert' severity="success">This is a success alert — check it out!</Alert>
+                    }, 3000)
+                )
             }
         </>
     );
