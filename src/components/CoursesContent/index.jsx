@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
-import { SearchField } from '@aws-amplify/ui-react';
+import { SearchField, AmplifyAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
-import { getCourses } from '../../api/courseAPI'
+import { getCourses } from '../../api/courseAPI';
+import Amplify from 'aws-amplify';
+// import { AmplifyStorageProvider } from '@aws-amplify/storage';
+// import awsconfig from './aws-exports';
+
+// Amplify.configure(awsconfig);
+// Amplify.addPluggable(new AmplifyStorageProvider());
+
 
 
 const CoursesContent = () => {
@@ -84,7 +91,7 @@ const CoursesContent = () => {
                                                 acceptedFileTypes={['.doc', '.docx', '.pdf', '.xls']}
                                                 accessLevel="public"
                                                 maxFileCount={1}
-                                                path='/courses'
+                                                path='courses'
                                                 displayText={{
                                                     dropFilesText: 'Porter et deposer ici ou',
                                                     browseFilesText: 'Ouvrir l\'explorateur',
@@ -108,6 +115,13 @@ const CoursesContent = () => {
                         </>
                     ) : (
                         <>
+                            <div className="text-end my-3">
+                                <Button variant="contained" color="error">Supprimer</Button>
+                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                    Ajouter
+                                </Button>
+                            </div>
+                            
                             <SearchField
                                 label="Search"
                                 placeholder="Filtrer par date, EC, ou initule ..."
@@ -119,12 +133,6 @@ const CoursesContent = () => {
                                 value={query}
                             />
 
-                            <div className="text-end my-3">
-                                <Button variant="contained" color="error">Supprimer</Button>
-                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
-                                    Ajouter
-                                </Button>
-                            </div>
                             <div className="row">
                                 {
                                     isLoading ? (

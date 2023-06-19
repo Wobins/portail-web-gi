@@ -112,6 +112,13 @@ const PressReleasesContent = () => {
                         </>
                     ) : (
                         <>
+                            <div className="text-end my-3">
+                                <Button variant="contained" color="error">Supprimer</Button>
+                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                    Ajouter
+                                </Button>
+                            </div>
+                            
                             <SearchField
                                 label="Search"
                                 placeholder="Filtrer par date, EC, ou initule ..."
@@ -123,12 +130,6 @@ const PressReleasesContent = () => {
                                 value={query}
                             />
 
-                            <div className="text-end my-3">
-                                <Button variant="contained" color="error">Supprimer</Button>
-                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
-                                    Ajouter
-                                </Button>
-                            </div>
                             <div className="row">
                                 {
                                     isLoading ? (

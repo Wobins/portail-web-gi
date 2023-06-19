@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-portailgi-dev-224844-authRole",
+      "UnauthRoleArn": "arn:aws:iam::622795072375:role/amplify-portailgi-dev-224844-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::622795072375:role/amplify-portailgi-dev-224844-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-portailgi-dev-224844-deployment",
+      "UnauthRoleName": "amplify-portailgi-dev-224844-unauthRole",
+      "StackName": "amplify-portailgi-dev-224844",
+      "StackId": "arn:aws:cloudformation:us-east-1:622795072375:stack/amplify-portailgi-dev-224844/1a2686e0-0eeb-11ee-bb07-0a9b366d740d",
+      "AmplifyAppId": "d2gemh4t9a0688"
+    },
+    "categories": {
+      "auth": {
+        "portailgi15b634c2": {}
+      }
+    }
+  }
+}

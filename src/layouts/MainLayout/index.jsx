@@ -9,133 +9,192 @@ import {
     Divider,
     IconButton,
     Container,
-    Avatar
+    Avatar,
+    Tooltip,
+    Menu,
+    MenuItem
 } from '@mui/material';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import { Auth } from 'aws-amplify';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link } from 'react-router-dom';
 import Copyright from '../../components/Copyright';
-import AccountMenu from '../../components/AccountMenu'
 import SubscriptionDialog from '../../components/SubscriptionDialog';
+import LoginDialog from '../../components/LoginDialog';
 import { listItems } from '../../utils/listItems';
 import drawer from '../../utils/Drawer';
 import appBar from '../../utils/AppBar';
+
+const loggedOutOptions = ['Connexion'];
+const loggedInOptions = ['Parametres', 'Se deconnecter'];
 
 const MainLayout = (props) => {
     const {component} = props; 
     const Drawer = drawer;
     const AppBar = appBar;
     const mdTheme = createTheme();
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [open, setOpen] = React.useState(false);
+    const [showLogin, setShowLogin] = React.useState(false)
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [admin, setAdmin] = React.useState(null);
 
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
+    // Function to check if a user is logged in
+    const checkUserLoggedIn = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setAdmin(user);
+        } catch (error) {
+            console.log('No user logged in');
+        }
+    };
+
+    // Function to log out user
+    const signOut = async () => {
+        try {
+          await Auth.signOut();
+        } catch (error) {
+          console.log('error signing out: ', error);
+        }
+    }
+
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
-    const toggleDrawer = () => {
-        setOpen(!open);
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
     };
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+    const handleShowLoginForm = () => {
+        setShowLogin(true);
+        setAnchorElUser(null); 
+    }
+
+    React.useEffect(() => {
+        checkUserLoggedIn();
+    }, [])
 
     return (
-        <ThemeProvider theme={mdTheme}>
-            <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                <AppBar position="absolute" open={open}>
-                    <Toolbar
-                        sx={{
-                        pr: '24px', // keep right padding when drawer closed
-                        }}
-                    >
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={toggleDrawer}
-                            sx={{
-                                marginRight: '36px',
-                                ...(open && { display: 'none' }),
-                            }}
-                        >
-                        <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            sx={{ flexGrow: 1 }}
-                        >
-                            <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
-                        </Typography>
-                        <IconButton color="inherit"
-                            onClick={handleOpenUserMenu}
-                            size="large"
-                            sx={{ ml: 2, p: 0 }}
-                            aria-label="account of current user"
-                            aria-controls={Boolean(anchorElUser) ? 'account-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={Boolean(anchorElUser) ? 'true' : undefined}
-                        >
-                            {
-                                true ? (
-                                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-                                ) : (
-                                    <AccountCircle sx={{ width: 32, height: 32 }} />
-                                )
-                            }
-                            <AccountMenu 
-                                anchorEl={anchorElUser}
-                                isLoggedIn={true}
-                                opened={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                                onClick={handleCloseUserMenu}
-                            />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <Drawer variant="permanent" open={open}>
-                <Toolbar
-                    sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    px: [1],
-                    }}
-                >
-                    <IconButton onClick={toggleDrawer}>
-                    <ChevronLeftIcon />
-                    </IconButton>
-                </Toolbar>
-                <Divider />
-                <List component="nav">
-                    {listItems}
-                </List>
-                </Drawer>
-                <Box
-                    component="main"
-                    sx={{
-                    //     backgroundColor: (theme) =>
-                    //     theme.palette.mode === 'light'
-                    //         ? theme.palette.grey[100]
-                    //         : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Toolbar />
-                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} style={{flex: 1}}>
-                        <SubscriptionDialog />
-                        { component }
-                    </Container>
-                    <Copyright sx={{ pt: 4 }} />
-                </Box>
-            </Box>
-        </ThemeProvider>
+        <>
+            {
+                admin ? (
+                    <ThemeProvider theme={mdTheme}>
+                        <Box sx={{ display: 'flex' }}>
+                            <CssBaseline />
+
+                            <AppBar position="absolute" open={open}>
+                                <Toolbar
+                                    sx={{
+                                    pr: '24px', // keep right padding when drawer closed
+                                    }}
+                                >
+                                    <IconButton
+                                        edge="start"
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        onClick={toggleDrawer}
+                                        sx={{
+                                            marginRight: '36px',
+                                            ...(open && { display: 'none' }),
+                                        }}
+                                    >
+                                        <MenuIcon />
+                                    </IconButton>
+                                    <Typography
+                                        component="h1"
+                                        variant="h6"
+                                        color="inherit"
+                                        noWrap
+                                        sx={{ flexGrow: 1 }}
+                                    >
+                                        <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
+                                    </Typography>
+                                    <Tooltip title="Open loggedOutOptions">
+                                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id="menu-appbar"
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
+                                    >
+                                        {loggedOutOptions.map((setting) => (
+                                            <MenuItem key={setting} onClick={handleShowLoginForm}>
+                                                <Typography textAlign="center">{setting}</Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                </Toolbar>
+                            </AppBar>
+
+                            <Drawer variant="permanent" open={open}>
+                                <Toolbar
+                                    sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-end',
+                                    px: [1],
+                                    }}
+                                >
+                                    <IconButton onClick={toggleDrawer}>
+                                    <ChevronLeftIcon />
+                                    </IconButton>
+                                </Toolbar>
+                                <Divider />
+                                <List component="nav">
+                                    {listItems}
+                                </List>
+                            </Drawer>
+
+                            <Box
+                                component="main"
+                                sx={{
+                                //     backgroundColor: (theme) =>
+                                //     theme.palette.mode === 'light'
+                                //         ? theme.palette.grey[100]
+                                //         : theme.palette.grey[900],
+                                    flexGrow: 1,
+                                    height: '100vh',
+                                    overflow: 'auto',
+                                }}
+                            >
+                                <Toolbar />
+                                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} style={{flex: 1}}>
+                                    <SubscriptionDialog />
+                                    { component }
+                                    {showLogin && <LoginDialog isOpened={showLogin} />}
+                                </Container>
+                                <Copyright sx={{ pt: 4 }} />
+                            </Box>
+                        </Box>
+                    </ThemeProvider>
+                ) : (
+                    <div className="text-center">
+                        Hello
+                    </div>
+                )
+            }
+        </>
     );
 }
 

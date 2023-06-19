@@ -28,7 +28,13 @@ const TeachersContent = () => {
         status: "",
         isManager: false
     });
-    
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const handleRowSelection = (selection) => {
+        setSelectedRows(selection.rowIds);
+    // Perform your desired actions with the selected row IDs
+        console.log(selection.rowIds);
+    };
     const handleAddBtn = () => {
         setShowForm(true);
     }
@@ -140,11 +146,11 @@ const TeachersContent = () => {
                                                     value={teachersData.status} 
                                                     onChange={handleChange}
                                                 >
-                                                <MenuItem value="MC">MC</MenuItem>
-                                                <MenuItem value="CC">CC</MenuItem>
-                                                <MenuItem value="ASS">ASS</MenuItem>
-                                                <MenuItem value="VAC">VAC</MenuItem>
-                                                <MenuItem value="VAC Pro">VAC Pro</MenuItem>
+                                                    <MenuItem value="MC">MC</MenuItem>
+                                                    <MenuItem value="CC">CC</MenuItem>
+                                                    <MenuItem value="ASS">ASS</MenuItem>
+                                                    <MenuItem value="VAC">VAC</MenuItem>
+                                                    <MenuItem value="VAC Pro">VAC Pro</MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </div>
@@ -219,6 +225,8 @@ const TeachersContent = () => {
                                             },
                                         }}
                                         pageSizeOptions={[5, 10, 15, 20, 25]}
+                                        onSelectionModelChange={(e) => handleRowSelection(e)}
+                                        selectionModel={selectedRows}
                                         checkboxSelection
                                     />
                                 )

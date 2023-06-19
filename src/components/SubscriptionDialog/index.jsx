@@ -38,7 +38,13 @@ const SubscriptionDialog = () => {
         //     });
         // }
         setOpenDialog(false);
+        // Show the alert
         setShowAlert(true);
+
+        // Hide the alert after 5 seconds
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 5000);
     };
     const handleCloseDialog = () => {
         setOpenDialog(false);
@@ -101,9 +107,9 @@ const SubscriptionDialog = () => {
 
             {
                 showAlert && (
-                    setTimeout(() => {
-                        <Alert className='success-alert' severity="success">This is a success alert — check it out!</Alert>
-                    }, 3000)
+                    <Alert severity="success" className='success-alert' onClose={() => setShowAlert(false)}>
+                      Form submitted successfully!
+                    </Alert>
                 )
             }
         </>
