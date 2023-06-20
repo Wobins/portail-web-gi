@@ -11,6 +11,7 @@ import {
     FormControl, FormLabel, Radio, RadioGroup, FormControlLabel 
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { Auth } from 'aws-amplify';
 import { getTeachers, addTeacher } from '../../api/teacherAPI';
 import generateUniqueId from '../../utils/generateUniqueId';
 import teachersColumns from '../../utils/teachersColumns';
@@ -29,6 +30,17 @@ const TeachersContent = () => {
         isManager: false
     });
     const [selectedRows, setSelectedRows] = useState([]);
+    const [admin, setAdmin] = React.useState(null);
+
+    // Function to check if a user is logged in
+    const checkUserLoggedIn = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setAdmin(user);
+        } catch (error) {
+            console.log('No user logged in');
+        }
+    };
 
     const handleRowSelection = (selection) => {
         setSelectedRows(selection.rowIds);
@@ -92,6 +104,10 @@ const TeachersContent = () => {
     
         get_teachers();
     }, [showForm, teachers]);
+
+    useEffect(() => {
+        checkUserLoggedIn();
+    }, []);
 
     return (
         <>
@@ -203,17 +219,21 @@ const TeachersContent = () => {
                         
                     ) : (
                         <>
-                            <div className="text-end my-3">
-                                <Button variant="contained" color="error">Supprimer</Button>
-                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
-                                    Ajouter
-                                </Button>
-                            </div>
+                            {
+                                admin && 
+                                    <div className="text-end my-3">
+                                        <Button variant="contained" color="error">Supprimer</Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                            Ajouter
+                                        </Button>
+                                    </div>
+                            }
                             {
                                 isLoading ? (
-                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-                                        <CircularProgress />
-                                        <span className="m-2">En cours de chargement ...</span>
+                                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                        <CircularProgress /> <br />
+                                        <h5 className="fw-semibold">Chargement en cours</h5>
+                                        <span className="">Veuillez patienter svp.</span>
                                     </div>
                                 ) : (
                                     <DataGrid
@@ -227,7 +247,7 @@ const TeachersContent = () => {
                                         pageSizeOptions={[5, 10, 15, 20, 25]}
                                         onSelectionModelChange={(e) => handleRowSelection(e)}
                                         selectionModel={selectedRows}
-                                        checkboxSelection
+                                        checkboxSelection = {admin ? true : false}
                                     />
                                 )
                             }

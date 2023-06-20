@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { Auth } from 'aws-amplify';
 import { addCompany, getCompanies } from '../../api/companyAPI';
 import generateUniqueId from '../../utils/generateUniqueId';
 import companiesColumns from '../../utils/companiesColumns';
@@ -17,6 +18,17 @@ const EnterprisesContent = () => {
         email: "",
         website: ""
     });
+    const [admin, setAdmin] = React.useState(null);
+
+    // Function to check if a user is logged in
+    const checkUserLoggedIn = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setAdmin(user);
+        } catch (error) {
+            console.log('No user logged in');
+        }
+    };
 
     
     const handleAddBtn = () => {
@@ -32,6 +44,7 @@ const EnterprisesContent = () => {
             website: ""
         });
     }
+
     const handleChange = e => {
         const { name, value } = e.target;
         setCompanyData({ ...companyData, [name]: value });
@@ -65,7 +78,7 @@ const EnterprisesContent = () => {
     useEffect(() => {
         document.title = "Entreprises";
     }, []);
-    
+
     useEffect(() => {
         const get_companies = async () => {
             const companiesFromServer = await fetchCompanies();
@@ -75,6 +88,10 @@ const EnterprisesContent = () => {
     
         get_companies();
     }, [showForm, companies]);
+
+    useEffect(() => {
+        checkUserLoggedIn();
+    }, []);
 
     return (
         <>
@@ -155,17 +172,21 @@ const EnterprisesContent = () => {
                         </>
                     ) : (
                         <>
-                            <div className="text-end my-3">
-                                <Button variant="contained" color="error">Supprimer</Button>
-                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
-                                    Ajouter
-                                </Button>
-                            </div>
+                            {
+                                admin &&
+                                    <div className="text-end my-3">
+                                        <Button variant="contained" color="error">Supprimer</Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                            Ajouter
+                                        </Button>
+                                    </div>
+                            }
                             {
                                 isLoading ? (
-                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-                                        <CircularProgress />
-                                        <span className="m-2">En cours de chargement ...</span>
+                                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                        <CircularProgress /> <br />
+                                        <h5 className="fw-semibold">Chargement en cours</h5>
+                                        <span className="">Veuillez patienter svp.</span>
                                     </div>
                                 ) : (
                                     <DataGrid
@@ -177,7 +198,7 @@ const EnterprisesContent = () => {
                                             },
                                         }}
                                         pageSizeOptions={[10, 15, 20, 25]}
-                                        checkboxSelection
+                                        checkboxSelection = {admin ? true : false}
                                         // style={{height: "50vh", width: "60vw"}}
                                     />
                                 )

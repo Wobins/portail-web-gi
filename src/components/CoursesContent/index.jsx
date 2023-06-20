@@ -2,23 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
 import { SearchField, AmplifyAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
+import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
 import { getCourses } from '../../api/courseAPI';
-import Amplify from 'aws-amplify';
-// import { AmplifyStorageProvider } from '@aws-amplify/storage';
-// import awsconfig from './aws-exports';
-
-// Amplify.configure(awsconfig);
-// Amplify.addPluggable(new AmplifyStorageProvider());
-
-
 
 const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
     const [courses, setCourses] = useState([]);
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [admin, setAdmin] = React.useState(null);
+
+    // Function to check if a user is logged in
+    const checkUserLoggedIn = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setAdmin(user);
+        } catch (error) {
+            console.log('No user logged in');
+        }
+    };
 
     const onChange = (event) => {
       setQuery(event.target.value);
@@ -54,6 +58,10 @@ const CoursesContent = () => {
         }
     
         get_courses();
+    }, []);
+
+    useEffect(() => {
+        checkUserLoggedIn();
     }, []);
 
     return (
@@ -115,12 +123,15 @@ const CoursesContent = () => {
                         </>
                     ) : (
                         <>
-                            <div className="text-end my-3">
-                                <Button variant="contained" color="error">Supprimer</Button>
-                                <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
-                                    Ajouter
-                                </Button>
-                            </div>
+                            {
+                                admin && 
+                                    <div className="text-end my-3">
+                                        <Button variant="contained" color="error">Supprimer</Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                            Ajouter
+                                        </Button>
+                                    </div>
+                            }
                             
                             <SearchField
                                 label="Search"
@@ -136,14 +147,15 @@ const CoursesContent = () => {
                             <div className="row">
                                 {
                                     isLoading ? (
-                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-                                            <CircularProgress />
-                                            <span className='m-2'>En cours de chargement ...</span>
+                                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+                                            <CircularProgress /> <br />
+                                            <h5 className="fw-semibold">Chargement en cours</h5>
+                                            <span className="">Veuillez patienter svp.</span>
                                         </div>
                                     ) : (
                                         searchArray(query, courses).map((el, index) => (
                                             <div className="col-lg-4 col-md-6" key={index}>
-                                                <div className="container">
+                                                <div className="text-center mx-auto">
                                                     <PDFViewer
                                                         url={el.url}
                                                         label={el.label}

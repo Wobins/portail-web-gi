@@ -70,7 +70,7 @@ const LoginDialog = ({isOpened}) => {
         e.preventDefault();
         signIn();
         setLoginData({email: "", password: ""});
-        // setOpenDialog(false);
+        setOpenDialog(false);
     };
     const handleCloseDialog = () => {
         setOpenDialog(false);
