@@ -115,33 +115,65 @@ const MainLayout = (props) => {
                             >
                                 <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
                             </Typography>
-                            <Tooltip title="Open loggedOutOptions">
+                            <Tooltip title="Profil">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                    {
+                                        admin ? 
+                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> 
+                                            : <Avatar src="/broken-image.jpg" />
+                                    }
+                                    
                                 </IconButton>
                             </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {loggedOutOptions.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleShowLoginForm}>
-                                        <Typography textAlign="center">{setting}</Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
+                            {
+                                admin ? 
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id="menu-appbar"
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
+                                    >
+                                        {loggedInOptions.map((setting) => (
+                                            <MenuItem key={setting} onClick={signOut}>
+                                                <Typography textAlign="center">{setting}</Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                : 
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id="menu-appbar"
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
+                                    >
+                                        {loggedOutOptions.map((setting) => (
+                                            <MenuItem key={setting} onClick={handleShowLoginForm}>
+                                                <Typography textAlign="center">{setting}</Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+
+                            }
                         </Toolbar>
                     </AppBar>
 

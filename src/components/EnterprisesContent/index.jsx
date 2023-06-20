@@ -18,7 +18,8 @@ const EnterprisesContent = () => {
         email: "",
         website: ""
     });
-    const [admin, setAdmin] = React.useState(null);
+    const [admin, setAdmin] = useState(null);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -199,7 +200,11 @@ const EnterprisesContent = () => {
                                         }}
                                         pageSizeOptions={[10, 15, 20, 25]}
                                         checkboxSelection = {admin ? true : false}
-                                        // style={{height: "50vh", width: "60vw"}}
+                                        onRowSelectionModelChange={(newRowSelectionModel) => {
+                                            setRowSelectionModel(newRowSelectionModel);
+                                            console.log(newRowSelectionModel)
+                                        }}
+                                        rowSelectionModel={rowSelectionModel}
                                     />
                                 )
                             }

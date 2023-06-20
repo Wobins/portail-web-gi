@@ -29,8 +29,8 @@ const TeachersContent = () => {
         status: "",
         isManager: false
     });
-    const [selectedRows, setSelectedRows] = useState([]);
-    const [admin, setAdmin] = React.useState(null);
+    const [admin, setAdmin] = useState(null);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -42,11 +42,7 @@ const TeachersContent = () => {
         }
     };
 
-    const handleRowSelection = (selection) => {
-        setSelectedRows(selection.rowIds);
-    // Perform your desired actions with the selected row IDs
-        console.log(selection.rowIds);
-    };
+    
     const handleAddBtn = () => {
         setShowForm(true);
     }
@@ -118,11 +114,6 @@ const TeachersContent = () => {
                 {
                     showForm ? (
                         <>
-                            <div className=" my-3">
-                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
-                                    Annuler
-                                </Button>
-                            </div>
                             <div className="row">
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
@@ -205,13 +196,21 @@ const TeachersContent = () => {
                                                 </RadioGroup>
                                             </FormControl>
                                         </div>
-                                        <Button 
-                                            fullWidth 
-                                            variant='contained' 
-                                            type='submit'
-                                        >
-                                            Enregistrer
-                                        </Button>
+                                        <div className="row">
+                                            <div className="col-6">                    
+                                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
+                                                    Annuler
+                                                </Button>
+                                            </div>
+                                            <div className="col-6 text-end">
+                                                <Button 
+                                                    variant='contained' 
+                                                    type='submit'
+                                                >
+                                                    Enregistrer
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </Box>
                                 </div>
                             </div>
@@ -245,8 +244,11 @@ const TeachersContent = () => {
                                             },
                                         }}
                                         pageSizeOptions={[5, 10, 15, 20, 25]}
-                                        onSelectionModelChange={(e) => handleRowSelection(e)}
-                                        selectionModel={selectedRows}
+                                        onRowSelectionModelChange={(newRowSelectionModel) => {
+                                            setRowSelectionModel(newRowSelectionModel);
+                                            console.log(newRowSelectionModel)
+                                        }}
+                                        rowSelectionModel={rowSelectionModel}
                                         checkboxSelection = {admin ? true : false}
                                     />
                                 )

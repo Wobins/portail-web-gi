@@ -12,7 +12,8 @@ const CoursesContent = () => {
     const [courses, setCourses] = useState([]);
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [admin, setAdmin] = React.useState(null);
+    const [admin, setAdmin] = useState(null);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -73,11 +74,6 @@ const CoursesContent = () => {
                 {
                     showForm ? (
                         <>
-                            <div className=" my-3">
-                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
-                                    Annuler
-                                </Button>
-                            </div>
                             <div className="row">
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
@@ -109,14 +105,22 @@ const CoursesContent = () => {
                                                 }}
                                             />
                                         </div>
-                                        <Button 
-                                            fullWidth 
-                                            variant='contained' 
-                                            type='submit'
-                                            onClick={handleSubmit}
-                                        >
-                                            Enregistrer
-                                        </Button>
+                                        <div className="row">
+                                            <div className="col-6"> 
+                                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
+                                                    Annuler
+                                                </Button>
+                                            </div>
+                                            <div className="col-6 text-end">
+                                                <Button 
+                                                    variant='contained' 
+                                                    type='submit'
+                                                    onClick={handleSubmit}
+                                                >
+                                                    Enregistrer
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </Box>
                                 </div>
                             </div>

@@ -78,11 +78,6 @@ const PressReleasesContent = () => {
                 {
                     showForm ? (
                         <>
-                            <div className=" my-3">
-                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
-                                    Annuler
-                                </Button>
-                            </div>
                             <div className="row">
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
@@ -114,14 +109,23 @@ const PressReleasesContent = () => {
                                                 }}
                                             />
                                         </div>
-                                        <Button 
-                                            fullWidth 
-                                            variant='contained' 
-                                            type='submit'
-                                            onClick={handleSubmit}
-                                        >
-                                            Enregistrer
-                                        </Button>
+                                        <div className="row">
+                                            <div className="col-6">                    
+                                            <Button variant="outlined" color="error" onClick={handleUndoBtn}>
+                                                Annuler
+                                            </Button>
+                                            </div>
+                                            <div className="col-6 text-end">
+                                                <Button 
+                                                    // fullWidth 
+                                                    variant='contained' 
+                                                    type='submit'
+                                                    onClick={handleSubmit}
+                                                >
+                                                    Enregistrer
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </Box>
                                 </div>
                             </div>
