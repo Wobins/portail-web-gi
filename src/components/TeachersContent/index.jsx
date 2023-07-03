@@ -77,7 +77,7 @@ const TeachersContent = () => {
                 isManager: false
             });
         } catch (error) {
-            console.error('Error updating item:', error);
+            console.error('Error updating item: ', error);
         }
     }
     const handleDelete = () => {
