@@ -99,10 +99,10 @@ const LoginDialog = ({isOpened}) => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    {/* <DialogContentText>
                         To subscribe to this website, please enter your email address here. We
                         will send updates occasionally.
-                    </DialogContentText>
+                    </DialogContentText> */}
                     <TextField
                         autoFocus 
                         // required 
@@ -139,8 +139,8 @@ const LoginDialog = ({isOpened}) => {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button type='submit'>Se connecter</Button>
+                    <Button onClick={handleCloseDialog} color='error' variant='outlined' size='small'>Annuler</Button>
+                    <Button type='submit' variant='contained' size='small'>Se connecter</Button>
                 </DialogActions>
             </Dialog>
         </>

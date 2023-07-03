@@ -24,10 +24,5 @@ export function addCompany (company) {
 }
 
 export function deleteCompany (id) {
-    return axios.delete(`${url}/companies/${id}`, {
-        headers: {
-            "Content-Type": "application/json",
-            'Access-Control-Allow-Origin': '*'
-        }
-    });
+    return axios.delete(`${url}/companies/${id}`);
 }

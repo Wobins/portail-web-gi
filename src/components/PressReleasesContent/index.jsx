@@ -135,8 +135,10 @@ const PressReleasesContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error">Supprimer</Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                        <Button variant="contained" color="error" style={{textTransform: 'none'}}>
+                                            Supprimer
+                                        </Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2' style={{textTransform: 'none'}}>
                                             Ajouter
                                         </Button>
                                     </div>

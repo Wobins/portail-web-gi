@@ -29,9 +29,5 @@ export function addTeacher (teacher) {
 }
 
 export function deleteTeacher (id) {
-    return axios.delete(`${url}/teachers/${id}`, {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
+    return axios.delete(`${url}/teachers/${id}`);
 }

@@ -48,11 +48,12 @@ const MainLayout = (props) => {
             console.log('No user logged in');
         }
     };
-
+    
     // Function to log out user
     const signOut = async () => {
         try {
-          await Auth.signOut();
+            await Auth.signOut();
+            setAdmin(null);
         } catch (error) {
           console.log('error signing out: ', error);
         }
@@ -81,6 +82,10 @@ const MainLayout = (props) => {
     React.useEffect(() => {
         checkUserLoggedIn();
     }, []);
+
+    // React.useEffect(() => {
+    //     window.location.reload()
+    // }, [admin])
 
     return (
         <>
@@ -113,7 +118,9 @@ const MainLayout = (props) => {
                                 noWrap
                                 sx={{ flexGrow: 1 }}
                             >
-                                <Link to={`/`} className='text-white'>Portail GI LOGO</Link>
+                                <Link to={`/`} className='text-white' style={{textDecoration: 'none'}}>
+                                    Portail GI
+                                </Link>
                             </Typography>
                             <Tooltip title="Profil">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

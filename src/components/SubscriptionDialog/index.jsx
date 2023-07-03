@@ -68,7 +68,7 @@ const SubscriptionDialog = () => {
         <>
             <Dialog open={openDialog} component="form" ref={subscriptionForm} onSubmit={handleSubscribe}>
                 <DialogTitle className='border-bottom mb-3'>
-                    Subscribe
+                    Souscription
                     <IconButton
                         aria-label="close"
                         onClick={handleCloseDialog}
@@ -84,8 +84,7 @@ const SubscriptionDialog = () => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
+                        Veuillez entrer votre adresse email afin de recevoir des mises a jour concernant l'ajout de nouvelles ressources.Vous recevrez un email de confirmation par la suite.
                     </DialogContentText>
                     <TextField
                         autoFocus required fullWidth
@@ -100,8 +99,8 @@ const SubscriptionDialog = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button type='submit'>Subscribe</Button>
+                    <Button onClick={handleCloseDialog} variant='outlined' color='error'>Annuler</Button>
+                    <Button type='submit' variant='contained'>Souscrire</Button>
                 </DialogActions>
             </Dialog>
 

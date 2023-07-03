@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
-import { SearchField, AmplifyAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
@@ -14,6 +14,18 @@ const CoursesContent = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [admin, setAdmin] = useState(null);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [file, setFile] = useState();
+
+  const handleUpload = async () => {
+    const { uploadFile } = await StorageManager.getInstance();
+    const response = await uploadFile({
+      file: file,
+      bucket: "tutorial-project-iut",
+      key: "courses/my-file.pdf",
+    });
+
+    console.log(response);
+  };
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -48,6 +60,14 @@ const CoursesContent = () => {
         const data = res.data;
         return data;
     }
+    // const handleUpload = async (file) => {
+    //     try {
+    //       await StorageManager.put(file, { path: 'courses/' });
+    //       console.log('File uploaded successfully');
+    //     } catch (error) {
+    //       console.error('Error uploading file:', error);
+    //     }
+    // };
     
     useEffect(() => {
         document.title = "Entreprises";
@@ -90,12 +110,20 @@ const CoursesContent = () => {
                                         <div className='mb-3'>
                                             <TextField fullWidth id="description" label="Annee academique" />
                                         </div>
-                                        <div className="mb-3">
+                                        <div>
+                                            <input 
+                                                type="file" 
+                                                onChange={(event) => setFile(event.target.files[0])} 
+                                            />
+                                            <button onClick={handleUpload}>Upload</button>
+                                        </div>
+                                        {/* <div className="mb-3">
                                             <StorageManager
-                                                acceptedFileTypes={['.doc', '.docx', '.pdf', '.xls']}
+                                                acceptedFileTypes={['.pdf']}
                                                 accessLevel="public"
                                                 maxFileCount={1}
-                                                path='courses'
+                                                path='courses/'
+                                                isResumable
                                                 displayText={{
                                                     dropFilesText: 'Porter et deposer ici ou',
                                                     browseFilesText: 'Ouvrir l\'explorateur',
@@ -103,8 +131,9 @@ const CoursesContent = () => {
                                                       return `${count} documents téléversés`;
                                                     },
                                                 }}
+                                                onUploadStart={handleUpload}
                                             />
-                                        </div>
+                                        </div> */}
                                         <div className="row">
                                             <div className="col-6"> 
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>
@@ -130,8 +159,8 @@ const CoursesContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error">Supprimer</Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                        <Button variant="contained" color="error" style={{textTransform: 'none'}}>Supprimer</Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
                                             Ajouter
                                         </Button>
                                     </div>

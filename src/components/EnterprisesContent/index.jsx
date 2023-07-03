@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Auth } from 'aws-amplify';
-import { addCompany, getCompanies } from '../../api/companyAPI';
+import { addCompany, getCompanies, deleteCompany } from '../../api/companyAPI';
 import generateUniqueId from '../../utils/generateUniqueId';
 import companiesColumns from '../../utils/companiesColumns';
 
@@ -67,6 +67,14 @@ const EnterprisesContent = () => {
         } catch (error) {
             console.error('Error updating item:', error);
         }
+    }
+    const handleDelete = () => {
+        rowSelectionModel.forEach(companyIdToDelete => {
+            deleteCompany(companyIdToDelete)
+                .then((res) => {
+                    console.log(res);
+                })       
+        });
     }
 
     // Fetch companies
@@ -176,8 +184,10 @@ const EnterprisesContent = () => {
                             {
                                 admin &&
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error">Supprimer</Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                        <Button variant="contained" color="error" onClick={handleDelete} style={{textTransform: 'none'}}>
+                                            Supprimer
+                                        </Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
                                             Ajouter
                                         </Button>
                                     </div>

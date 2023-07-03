@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Auth } from 'aws-amplify';
-import { getTeachers, addTeacher } from '../../api/teacherAPI';
+import { getTeachers, addTeacher, deleteTeacher } from '../../api/teacherAPI';
 import generateUniqueId from '../../utils/generateUniqueId';
 import teachersColumns from '../../utils/teachersColumns';
 
@@ -79,6 +79,14 @@ const TeachersContent = () => {
         } catch (error) {
             console.error('Error updating item:', error);
         }
+    }
+    const handleDelete = () => {
+        rowSelectionModel.forEach(teacherIdToDelete => {
+            deleteTeacher(teacherIdToDelete)
+                .then((res) => {
+                    console.log(res)
+                })       
+        });
     }
 
     const fetchTeachers = async () => {
@@ -221,8 +229,10 @@ const TeachersContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error">Supprimer</Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2'>
+                                        <Button variant="contained" color="error" onClick={handleDelete} style={{textTransform: 'none'}}>
+                                            Supprimer
+                                        </Button>
+                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
                                             Ajouter
                                         </Button>
                                     </div>

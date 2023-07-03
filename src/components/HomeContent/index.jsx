@@ -52,7 +52,7 @@ const HomeContent = () => {
         <>
             <Grid container spacing={2} style={{marginTop: '10px'}}>
                 {/* Recent Deposits */}
-                <Grid item xs={12} md={7} >
+                <Grid item xs={12} md={6} >
                     <Paper
                         sx={{
                             p: 2,
@@ -63,7 +63,7 @@ const HomeContent = () => {
                     >
                     <BlockResource
                         title="Communiques"
-                        description="Tous les cours du departement, pour toutes les filieres et tous les niveaux"
+                        description="Tous les communiqués du departement, pour toutes les filieres et tous les niveaux"
                         qty={
                             isLoading ? <CircularProgress /> : pressReleases
                         }
@@ -71,7 +71,7 @@ const HomeContent = () => {
                         />
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={5} >
+                <Grid item xs={12} md={6} >
                     <Paper
                     sx={{
                         p: 2,
@@ -82,7 +82,7 @@ const HomeContent = () => {
                     >
                     <BlockResource
                         title="Cours"
-                        description="Tous les cours du departement, pour toutes les filieres et tous les niveaux"
+                        description="Tous les cours du département, pour toutes les filières et tous les niveaux"
                         qty={
                             isLoading ? <CircularProgress /> : courses
                         }
@@ -92,7 +92,7 @@ const HomeContent = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={2} style={{marginTop: '10px'}}>
-                <Grid item xs={12} md={4} >
+                {/* <Grid item xs={12} md={4} >
                 <Paper
                     sx={{
                         p: 2,
@@ -108,27 +108,27 @@ const HomeContent = () => {
                         link="lexique"
                         />
                 </Paper>
-                </Grid>
-                <Grid item xs={12} md={4} >
-                <Paper
-                    sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 240,
-                    }}
-                    >
-                    <BlockResource
-                        title="Entreprises"
-                        description="Plusieurs conatcts d'entreprises repertoriees pour faciliter vos demandes d'emploi et de stage"
-                        qty={
-                            isLoading ? <CircularProgress /> : companies
-                        }
-                        link="entreprises"
+                </Grid> */}
+                <Grid item xs={12} md={6} >
+                    <Paper
+                        sx={{
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: 240,
+                        }}
+                        >
+                        <BlockResource
+                            title="Entreprises"
+                            description="Plusieurs conatcts d'entreprises repertoriées pour faciliter vos demandes d'emploi et de stage"
+                            qty={
+                                isLoading ? <CircularProgress /> : companies
+                            }
+                            link="entreprises"
                         />
-                </Paper>
+                    </Paper>
                 </Grid>
-                <Grid item xs={12} md={4} >
+                <Grid item xs={12} md={6} >
                 <Paper
                     sx={{
                         p: 2,
@@ -139,7 +139,7 @@ const HomeContent = () => {
                     >
                     <BlockResource
                         title="Enseignants"
-                        description="Une equipe d'enseignants et chercheurs prets a vous aider"
+                        description="Une équipe d'enseignants et chercheurs prets à vous aider"
                         qty={
                             isLoading ? <CircularProgress /> : teachers
                         }

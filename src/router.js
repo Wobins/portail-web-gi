@@ -20,14 +20,14 @@ const router = createBrowserRouter([
     path: "/cours",
     element: <Courses />,
   },
-  {
-    path: "/lexique",
-    element: <Definitions />,
-  },
-  {
-    path: "/lexique/:id",
-    element: <Definition />,
-  },
+  // {
+  //   path: "/lexique",
+  //   element: <Definitions />,
+  // },
+  // {
+  //   path: "/lexique/:id",
+  //   element: <Definition />,
+  // },
   {
     path: "/entreprises",
     element: <Enterprises />,
