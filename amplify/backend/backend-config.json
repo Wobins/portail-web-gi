@@ -27,6 +27,24 @@
       "service": "Cognito"
     }
   },
+  "parameters": {
+    "AMPLIFY_storage_portailgi3e05a256_bucketName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "portailgi3e05a256"
+        }
+      ]
+    },
+    "AMPLIFY_storage_portailgi3e05a256_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "portailgi3e05a256"
+        }
+      ]
+    }
+  },
   "storage": {
     "portailgi3e05a256": {
       "dependsOn": [],

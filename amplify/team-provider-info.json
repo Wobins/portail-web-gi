@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "portailgi15b634c2": {}
+      },
+      "storage": {
+        "portailgi3e05a256": {
+          "bucketName": "tutorial-project-iut",
+          "region": "us-east-1"
+        }
       }
     }
   }
