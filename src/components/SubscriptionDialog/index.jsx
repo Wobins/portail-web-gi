@@ -28,15 +28,15 @@ const SubscriptionDialog = () => {
     const handleSubscribe = async (e) => {
         e.preventDefault();
         Cookies.set('subscribed', true, { expires: 365 })
-        // const res = await createSubscription({email: email});
-        // if (res.status === 201) {
-        //     emailjs.sendForm('service_pw6faxk', 'template_r86fzfc', subscriptionForm.current, 'err_HFhc-K3m1OQFM')
-        //     .then((result) => {
-        //         console.log(result.text);
-        //     }, (error) => {
-        //         console.log(error.text);
-        //     });
-        // }
+        const res = await createSubscription({email: email});
+        if (res.status === 201) {
+            emailjs.sendForm('service_pw6faxk', 'template_r86fzfc', subscriptionForm.current, 'err_HFhc-K3m1OQFM')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+        }
         setOpenDialog(false);
         // Show the alert
         setShowAlert(true);

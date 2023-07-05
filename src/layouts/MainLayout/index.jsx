@@ -2,6 +2,16 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    DialogContent,
+    InputLabel,
+    Input,
+    FormControl,
+    InputAdornment,
+    TextField,
     Box,
     Toolbar,
     List,
@@ -14,19 +24,22 @@ import {
     Menu,
     MenuItem
 } from '@mui/material';
-import { Auth } from 'aws-amplify';
+import CloseIcon from '@mui/icons-material/Close';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Auth } from 'aws-amplify';
 import { Link } from 'react-router-dom';
 import Copyright from '../../components/Copyright';
 import SubscriptionDialog from '../../components/SubscriptionDialog';
-import LoginDialog from '../../components/LoginDialog';
 import { listItems } from '../../utils/listItems';
 import drawer from '../../utils/Drawer';
 import appBar from '../../utils/AppBar';
 
 const loggedOutOptions = ['Connexion'];
 const loggedInOptions = ['Parametres', 'Se deconnecter'];
+
 
 const MainLayout = (props) => {
     const {component} = props; 
@@ -38,6 +51,132 @@ const MainLayout = (props) => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [admin, setAdmin] = React.useState(null);
+
+
+    const LoginDialog = () => {
+        const loginForm = React.useRef();
+        // const [openDialog, setOpenDialog] = React.useState(isOpened);
+        const [openDialog, setOpenDialog] = React.useState(true);
+        const [loginData, setLoginData] = React.useState({email: "", password: ""});
+        const [showPassword, setShowPassword] = React.useState(false);
+    
+        // Function to log in a user
+        const signIn = async() => {
+            try {
+              const user = await Auth.signIn(loginData.email, loginData.password);
+              const session = await Auth.currentSession();
+              console.log(user);
+              console.log(session);
+            } catch (error) {
+              console.log('error signing in', error);
+            }
+    
+            // try {
+            //     const user = await Auth.signIn("azalyange19@gmail.com", "W@@v1904");
+                
+            //     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+            //       // Handle new password requirement
+            //       const newPassword = 'p@ssw0rd';
+            //       const updatedUser = await Auth.completeNewPassword(user, newPassword);
+            //       console.log('User signed in:', updatedUser.username);
+            //     } else {
+            //       console.log('User signed in:', user.username);
+            //     }
+            //   } catch (error) {
+            //     console.log('Error signing in:', error);
+            //   }
+        }
+    
+        const handleClickShowPassword = () => setShowPassword((show) => !show);
+        const handleMouseDownPassword = (event) => {
+            event.preventDefault();
+        };
+        const handleOpenDialog = () => {
+            setOpenDialog(true);
+        };
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setLoginData({ ...loginData, [name]: value });
+        }
+        const handleLogin = (e) => {
+            e.preventDefault();
+            signIn();
+            setLoginData({email: "", password: ""});
+            setOpenDialog(false);
+        };
+        const handleCloseDialog = () => {
+            setOpenDialog(false);
+            setLoginData({email: "", password: ""});
+            setShowLogin(false);
+        };
+    
+    
+        return (
+            <>
+                <Dialog open={openDialog} component="form" ref={loginForm} onSubmit={handleLogin}>
+                    <DialogTitle className='border-bottom mb-3'>
+                        Connexion
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleCloseDialog}
+                            sx={{
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                color: (theme) => theme.palette.grey[500],
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        {/* <DialogContentText>
+                            To subscribe to this website, please enter your email address here. We
+                            will send updates occasionally.
+                        </DialogContentText> */}
+                        <TextField
+                            autoFocus 
+                            // required 
+                            fullWidth
+                            margin="dense"
+                            id="subscription-email"
+                            label="Email"
+                            type="email"
+                            name="email"
+                            value={loginData.email}
+                            variant="standard"
+                            onChange={handleChange}
+                        />
+                        <FormControl fullWidth required variant="standard" margin='dense'>
+                            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                            <Input
+                                id="standard-adornment-password"
+                                value={loginData.password}
+                                name='password'
+                                onChange={handleChange}
+                                type={showPassword ? 'text' : 'password'}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog} color='error' variant='outlined' size='small'>Annuler</Button>
+                        <Button type='submit' variant='contained' size='small'>Se connecter</Button>
+                    </DialogActions>
+                </Dialog>
+            </>
+        );
+    }
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -81,11 +220,7 @@ const MainLayout = (props) => {
 
     React.useEffect(() => {
         checkUserLoggedIn();
-    }, []);
-
-    // React.useEffect(() => {
-    //     window.location.reload()
-    // }, [admin])
+    }, [showLogin]);
 
     return (
         <>
@@ -218,8 +353,8 @@ const MainLayout = (props) => {
                         <Toolbar />
                         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} style={{flex: 1}}>
                             <SubscriptionDialog />
+                            {showLogin && <LoginDialog />}
                             { component }
-                            {showLogin && <LoginDialog isOpened={showLogin} />}
                         </Container>
                         <Copyright sx={{ pt: 4 }} />
                     </Box>
