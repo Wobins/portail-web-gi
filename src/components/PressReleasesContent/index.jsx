@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
+import { Divider, Button, Box, TextField, CircularProgress, Checkbox } from '@mui/material';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { SearchField } from '@aws-amplify/ui-react';
 import { Auth } from 'aws-amplify';
@@ -13,7 +13,8 @@ const PressReleasesContent = () => {
     const [communications, setCommunications] = useState([]);
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [admin, setAdmin] = React.useState(null);
+    const [admin, setAdmin] = useState(null);
+    const [selectedCourses, setSelectedCourses] = useState([]);
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -22,6 +23,16 @@ const PressReleasesContent = () => {
             setAdmin(user);
         } catch (error) {
             console.log('No user logged in');
+        }
+    };
+
+    const handleCheckboxSelection = (element) => {
+        if (selectedCourses.includes(element)) {
+          // Si l'élément est déjà dans le tableau, on le retire
+          setSelectedCourses(selectedCourses.filter(item => item !== element));
+        } else {
+          // Sinon, on l'ajoute au tableau
+          setSelectedCourses([...selectedCourses, element]);
         }
     };
 
@@ -135,7 +146,12 @@ const PressReleasesContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error" style={{textTransform: 'none'}}>
+                                        <Button 
+                                            variant="contained" 
+                                            color="error" 
+                                            style={{textTransform: 'none'}}
+                                            onClick={() => console.log(selectedCourses)}
+                                        >
                                             Supprimer
                                         </Button>
                                         <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2' style={{textTransform: 'none'}}>
@@ -166,7 +182,11 @@ const PressReleasesContent = () => {
                                     ) : (
                                         searchArray(query, communications).map((el, index) => (
                                             <div className="col-lg-4 col-md-6" key={index}>
-                                                <div className="container">
+                                                <div className="text-end">
+                                                    <Checkbox 
+                                                        size="small" 
+                                                        onChange={() => handleCheckboxSelection(el.url)}
+                                                    />
                                                     <PDFViewer
                                                         url={el.url}
                                                         label={el.label}

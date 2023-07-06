@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+    Alert,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Divider,
+    Button, 
+    Box, 
+    TextField, 
+    CircularProgress 
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid } from '@mui/x-data-grid';
 import { Auth } from 'aws-amplify';
 import { addCompany, getCompanies, deleteCompany } from '../../api/companyAPI';
@@ -20,6 +34,59 @@ const EnterprisesContent = () => {
     });
     const [admin, setAdmin] = useState(null);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [toDelete, setToDelete] = useState(false);
+
+    // const ConfirmationDialog = () => {
+    //     const confirmationModal = useRef();
+    //     const [openDialog, setOpenDialog] = useState(false);
+    //     const [showAlert, setShowAlert] = useState(false)
+
+    //     const handleOpenDialog = () => {
+    //         setOpenDialog(true);
+    //     };
+    //     const handleCloseDialog = () => {
+    //         setRowSelectionModel([]);
+    //         setToDelete(false);
+    //         setOpenDialog(false);
+    //     }
+    //     const handleConfirmDelete = () => {
+    //         rowSelectionModel.forEach(companyIdToDelete => {
+    //             deleteCompany(companyIdToDelete)
+    //                 .then((res) => {
+    //                     console.log(res);
+    //                 })       
+    //         });
+    //     }
+
+    //     return (
+    //         <Dialog open={openDialog} ref={confirmationModal} >
+    //             <DialogTitle className='border-bottom mb-3'>
+    //                 Confirmation
+    //                 <IconButton
+    //                     aria-label="close"
+    //                     onClick={handleCloseDialog}
+    //                     sx={{
+    //                         position: 'absolute',
+    //                         right: 8,
+    //                         top: 8,
+    //                         color: (theme) => theme.palette.grey[500],
+    //                     }}
+    //                 >
+    //                     <CloseIcon />
+    //                 </IconButton>
+    //             </DialogTitle>
+    //             <DialogContent>
+    //                 <DialogContentText>
+    //                     {`Vous etes sur le point de supprimer ${rowSelectionModel.length} elements. Veuillez confirmer en cliquant sur le bouton Supprimer`}
+    //                 </DialogContentText>
+    //             </DialogContent>
+    //             <DialogActions>
+    //                 <Button onClick={handleCloseDialog} variant='outlined' color='warning'>Annuler</Button>
+    //                 <Button variant='contained' color='error'  onClick={handleConfirmDelete}>Supprimer</Button>
+    //             </DialogActions>
+    //         </Dialog>
+    //     );
+    // }
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -69,12 +136,7 @@ const EnterprisesContent = () => {
         }
     }
     const handleDelete = () => {
-        rowSelectionModel.forEach(companyIdToDelete => {
-            deleteCompany(companyIdToDelete)
-                .then((res) => {
-                    console.log(res);
-                })       
-        });
+        rowSelectionModel.length > 0 && setToDelete(true);
     }
 
     // Fetch companies
@@ -222,6 +284,8 @@ const EnterprisesContent = () => {
                     )
                 }              
             </div>
+            {/* {toDelete && <ConfirmationDialog />} */}
+
         </>
     );
 }

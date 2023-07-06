@@ -55,7 +55,6 @@ const MainLayout = (props) => {
 
     const LoginDialog = () => {
         const loginForm = React.useRef();
-        // const [openDialog, setOpenDialog] = React.useState(isOpened);
         const [openDialog, setOpenDialog] = React.useState(true);
         const [loginData, setLoginData] = React.useState({email: "", password: ""});
         const [showPassword, setShowPassword] = React.useState(false);

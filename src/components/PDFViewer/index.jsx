@@ -4,7 +4,7 @@ import {
     Card, 
     CardMedia, 
     CardContent,
-    Typography 
+    Typography,
 } from '@mui/material';
 import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -42,7 +42,7 @@ const PDFViewer = ({url, code, label, school_year, added_at}) => {
                 </Document>
             </CardMedia>
             <CardContent className='bg-light py-2'>
-                <div className='mb-3'>
+                <div className='mb-3 text-center'>
                     <Typography variant="h7" gutterBottom>{code}</Typography><br />
                     <Typography variant="h6" gutterBottom component={Link} to={url} target='_blank'>
                         {label}

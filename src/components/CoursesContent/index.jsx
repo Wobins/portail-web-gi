@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, CircularProgress } from '@mui/material';
+import { Divider, Button, Box, TextField, CircularProgress, Checkbox } from '@mui/material';
 import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { Auth } from 'aws-amplify';
@@ -15,17 +15,28 @@ const CoursesContent = () => {
     const [admin, setAdmin] = useState(null);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [file, setFile] = useState();
+    const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const handleUpload = async () => {
-    const { uploadFile } = await StorageManager.getInstance();
-    const response = await uploadFile({
-      file: file,
-      bucket: "tutorial-project-iut",
-      key: "courses/my-file.pdf",
-    });
+    const handleUpload = async () => {
+        const { uploadFile } = await StorageManager.getInstance();
+        const response = await uploadFile({
+        file: file,
+        bucket: "tutorial-project-iut",
+        key: "courses/my-file.pdf",
+        });
 
-    console.log(response);
-  };
+        console.log(response);
+    };
+
+    const handleCheckboxSelection = (element) => {
+        if (selectedCourses.includes(element)) {
+          // Si l'élément est déjà dans le tableau, on le retire
+          setSelectedCourses(selectedCourses.filter(item => item !== element));
+        } else {
+          // Sinon, on l'ajoute au tableau
+          setSelectedCourses([...selectedCourses, element]);
+        }
+    };
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -159,7 +170,14 @@ const CoursesContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error" style={{textTransform: 'none'}}>Supprimer</Button>
+                                        <Button 
+                                            variant="contained" 
+                                            color="error" 
+                                            style={{textTransform: 'none'}}
+                                            onClick={() => console.log(selectedCourses)}
+                                        >
+                                            Supprimer
+                                        </Button>
                                         <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
                                             Ajouter
                                         </Button>
@@ -188,7 +206,11 @@ const CoursesContent = () => {
                                     ) : (
                                         searchArray(query, courses).map((el, index) => (
                                             <div className="col-lg-4 col-md-6" key={index}>
-                                                <div className="text-center mx-auto">
+                                                <div className="text-end">
+                                                    <Checkbox 
+                                                        size="small" 
+                                                        onChange={() => handleCheckboxSelection(el.url)}
+                                                    />
                                                     <PDFViewer
                                                         url={el.url}
                                                         label={el.label}
