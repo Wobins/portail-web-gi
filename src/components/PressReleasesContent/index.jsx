@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, CircularProgress, Checkbox } from '@mui/material';
+import { 
+    Divider, 
+    Button, 
+    Box, 
+    TextField, 
+    CircularProgress, 
+    Checkbox, 
+    Card,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Dialog,
+} from '@mui/material';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { SearchField } from '@aws-amplify/ui-react';
 import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
-import { getCommunications } from '../../api/pressAPI';
+import { getCommunications, deleteCommunication } from '../../api/pressAPI';
 import searchArray from '../../utils/searchArray';
 
 
@@ -14,7 +27,15 @@ const PressReleasesContent = () => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [admin, setAdmin] = useState(null);
-    const [selectedCourses, setSelectedCourses] = useState([]);
+    const [selectedCommunications, setSelectedCommunications] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -26,13 +47,13 @@ const PressReleasesContent = () => {
         }
     };
 
-    const handleCheckboxSelection = (element) => {
-        if (selectedCourses.includes(element)) {
+    const handleCheckboxSelection = (elementId) => {
+        if (selectedCommunications.includes(elementId)) {
           // Si l'élément est déjà dans le tableau, on le retire
-          setSelectedCourses(selectedCourses.filter(item => item !== element));
+          setSelectedCommunications(selectedCommunications.filter(item => item !== elementId));
         } else {
           // Sinon, on l'ajoute au tableau
-          setSelectedCourses([...selectedCourses, element]);
+          setSelectedCommunications([...selectedCommunications, elementId]);
         }
     };
 
@@ -42,12 +63,6 @@ const PressReleasesContent = () => {
     const onClear = () => {
       setQuery('');
     };
-    const searchCourse = (tab) => {
-        let newTab = tab.filter(el => (
-            query.toLowerCase() === "" ? el : (el.label + el.code + el.added_at + el.school_year).toLowerCase().includes(query)
-        ));
-        return newTab;  
-    }
 
     const handleAddBtn = () => {
         setShowForm(true);
@@ -60,6 +75,21 @@ const PressReleasesContent = () => {
         setShowForm(false);
         console.log("hello from communications");
     }
+    const handleDelete = () => {
+        selectedCommunications.map(comId => {
+            deleteCommunication(comId)
+                .then(() => {
+                    setCommunications(prevItems => prevItems.filter(item => item.id !== comId));
+                    setSelectedCommunications(prevItems => prevItems.filter(item => item.id !== comId));
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                });
+            return "OK without problem";
+        });
+        setOpen(false);
+    }
+
     const fetchCommunications = async () => {
         const res = await getCommunications();
         const data = res.data;
@@ -77,7 +107,12 @@ const PressReleasesContent = () => {
     }, []);
 
     useEffect(() => {
-        checkUserLoggedIn();
+        const interval = setInterval(checkUserLoggedIn, 1000);
+    
+        // Cleanup the interval when the component unmounts
+        return () => {
+          clearInterval(interval);
+        };
     }, []);
 
     return (
@@ -150,11 +185,19 @@ const PressReleasesContent = () => {
                                             variant="contained" 
                                             color="error" 
                                             style={{textTransform: 'none'}}
-                                            onClick={() => console.log(selectedCourses)}
+                                            disabled={isLoading ? true : false}
+                                            onClick={handleClickOpen}
                                         >
                                             Supprimer
                                         </Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} className='ms-2' style={{textTransform: 'none'}}>
+                                        <Button 
+                                            variant="contained" 
+                                            color="success" 
+                                            onClick={handleAddBtn} 
+                                            className='ms-2' 
+                                            style={{textTransform: 'none'}}
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Ajouter
                                         </Button>
                                     </div>
@@ -171,7 +214,7 @@ const PressReleasesContent = () => {
                                 value={query}
                             />
 
-                            <div className="row">
+                            <div className="row mt-5">
                                 {
                                     isLoading ? (
                                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
@@ -181,19 +224,25 @@ const PressReleasesContent = () => {
                                         </div>
                                     ) : (
                                         searchArray(query, communications).map((el, index) => (
-                                            <div className="col-lg-4 col-md-6" key={index}>
-                                                <div className="text-end">
-                                                    <Checkbox 
-                                                        size="small" 
-                                                        onChange={() => handleCheckboxSelection(el.url)}
-                                                    />
-                                                    <PDFViewer
-                                                        url={el.url}
-                                                        label={el.label}
-                                                        code={el.code}
-                                                        school_year={el.school_year}
-                                                        added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
-                                                    />
+                                            <div className="col-xl-4 col-md-6" key={index}>
+                                                <div className="text-end my-3">
+                                                    <Card id={el.id}>
+                                                        {
+                                                            admin && (
+                                                                <Checkbox 
+                                                                    size="small" 
+                                                                    onChange={() => handleCheckboxSelection(el.id)}
+                                                                />
+                                                            )
+                                                        }
+                                                        <PDFViewer
+                                                            url={el.url}
+                                                            label={el.label}
+                                                            code={el.code}
+                                                            school_year={el.school_year}
+                                                            added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
+                                                        />
+                                                    </Card>
                                                 </div>
                                             </div>
                                         ))
@@ -204,6 +253,28 @@ const PressReleasesContent = () => {
                     )
                 }              
             </div>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title" className='text-danger'>
+                    {"Etes vous sur de vouloir supprimer?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Vous etes sur le point de supprimer {selectedCommunications.length} communiques. Cette action est irreversible. Voulez vous tout de meme continuer?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Confirmer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

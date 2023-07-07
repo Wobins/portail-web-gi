@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider, 
     CircularProgress,
     Button, 
@@ -31,6 +36,14 @@ const TeachersContent = () => {
     });
     const [admin, setAdmin] = useState(null);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -81,12 +94,18 @@ const TeachersContent = () => {
         }
     }
     const handleDelete = () => {
-        rowSelectionModel.forEach(teacherIdToDelete => {
-            deleteTeacher(teacherIdToDelete)
-                .then((res) => {
-                    console.log(res)
-                })       
+        rowSelectionModel.map(teacherId => {
+            deleteTeacher(teacherId)
+                .then(() => {
+                    setTeachers(prevItems => prevItems.filter(item => item.id !== teacherId));
+                    setRowSelectionModel(prevItems => prevItems.filter(item => item.id !== teacherId));
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                });
+            return "OK without problem";
         });
+        setOpen(false);
     }
 
     const fetchTeachers = async () => {
@@ -110,7 +129,12 @@ const TeachersContent = () => {
     }, [showForm, teachers]);
 
     useEffect(() => {
-        checkUserLoggedIn();
+        const interval = setInterval(checkUserLoggedIn, 500);
+    
+        // Cleanup the interval when the component unmounts
+        return () => {
+          clearInterval(interval);
+        };
     }, []);
 
     return (
@@ -229,10 +253,23 @@ const TeachersContent = () => {
                             {
                                 admin && 
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error" onClick={handleDelete} style={{textTransform: 'none'}}>
+                                        <Button 
+                                            variant="contained" 
+                                            color="error" 
+                                            onClick={handleClickOpen} 
+                                            style={{textTransform: 'none'}}
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Supprimer
                                         </Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
+                                        <Button 
+                                            variant="contained" 
+                                            color="success" 
+                                            onClick={handleAddBtn} 
+                                            style={{textTransform: 'none'}} 
+                                            className='ms-2'
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Ajouter
                                         </Button>
                                     </div>
@@ -267,6 +304,28 @@ const TeachersContent = () => {
                     )
                 }
             </div>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Etes vous sur de vouloir supprimer?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Vous etes sur le point de supprimer {rowSelectionModel.length} enseignants du systeme. Cette action est irreversible. Voulez vous tout de meme continuer?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Confirmer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

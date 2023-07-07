@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Button, Box, TextField, CircularProgress, Checkbox } from '@mui/material';
+import { 
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    Divider, 
+    Button, 
+    Box, 
+    TextField, 
+    CircularProgress, 
+    Checkbox, 
+    Card 
+} from '@mui/material';
 import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
-import { getCourses } from '../../api/courseAPI';
+import { getCourses, deleteCourse } from '../../api/courseAPI';
 
 const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
@@ -13,9 +26,16 @@ const CoursesContent = () => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [admin, setAdmin] = useState(null);
-    const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [file, setFile] = useState();
     const [selectedCourses, setSelectedCourses] = useState([]);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleUpload = async () => {
         const { uploadFile } = await StorageManager.getInstance();
@@ -55,6 +75,21 @@ const CoursesContent = () => {
       setQuery('');
     };
 
+    const handleDelete = () => {
+        selectedCourses.map(courseId => {
+            deleteCourse(courseId)
+                .then(() => {
+                    setCourses(prevItems => prevItems.filter(item => item.id !== courseId));
+                    setSelectedCourses(prevItems => prevItems.filter(item => item.id !== courseId));
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                });
+            return "OK without problem";
+        });
+        setOpen(false);
+    }
+
     const handleAddBtn = () => {
         setShowForm(true);
     }
@@ -71,14 +106,6 @@ const CoursesContent = () => {
         const data = res.data;
         return data;
     }
-    // const handleUpload = async (file) => {
-    //     try {
-    //       await StorageManager.put(file, { path: 'courses/' });
-    //       console.log('File uploaded successfully');
-    //     } catch (error) {
-    //       console.error('Error uploading file:', error);
-    //     }
-    // };
     
     useEffect(() => {
         document.title = "Entreprises";
@@ -86,6 +113,7 @@ const CoursesContent = () => {
         const get_courses = async () => {
             const courses = await fetchCourses();
             setCourses(courses);
+            console.log(courses)
             setIsLoading(false);
         }
     
@@ -93,7 +121,12 @@ const CoursesContent = () => {
     }, []);
 
     useEffect(() => {
-        checkUserLoggedIn();
+        const interval = setInterval(checkUserLoggedIn, 500);
+
+        // Cleanup the interval when the component unmounts
+        return () => {
+          clearInterval(interval);
+        };
     }, []);
 
     return (
@@ -174,11 +207,19 @@ const CoursesContent = () => {
                                             variant="contained" 
                                             color="error" 
                                             style={{textTransform: 'none'}}
-                                            onClick={() => console.log(selectedCourses)}
+                                            onClick={handleClickOpen}
+                                            disabled={isLoading ? true : false}
                                         >
                                             Supprimer
                                         </Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
+                                        <Button 
+                                            variant="contained" 
+                                            color="success" 
+                                            onClick={handleAddBtn} 
+                                            style={{textTransform: 'none'}} 
+                                            className='ms-2'
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Ajouter
                                         </Button>
                                     </div>
@@ -195,7 +236,7 @@ const CoursesContent = () => {
                                 value={query}
                             />
 
-                            <div className="row">
+                            <div className="row mt-5">
                                 {
                                     isLoading ? (
                                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
@@ -205,19 +246,25 @@ const CoursesContent = () => {
                                         </div>
                                     ) : (
                                         searchArray(query, courses).map((el, index) => (
-                                            <div className="col-lg-4 col-md-6" key={index}>
-                                                <div className="text-end">
-                                                    <Checkbox 
-                                                        size="small" 
-                                                        onChange={() => handleCheckboxSelection(el.url)}
-                                                    />
-                                                    <PDFViewer
-                                                        url={el.url}
-                                                        label={el.label}
-                                                        code={el.code}
-                                                        school_year={el.school_year}
-                                                        added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
-                                                    />
+                                            <div className="col-xl-4 col-md-6" key={index}>
+                                                <div className="text-end my-3">
+                                                    <Card id={el.id}>
+                                                        {
+                                                            admin && (
+                                                                <Checkbox 
+                                                                    size="small" 
+                                                                    onChange={() => handleCheckboxSelection(el.id)}
+                                                                />
+                                                            )
+                                                        }
+                                                        <PDFViewer
+                                                            url={el.url}
+                                                            label={el.label}
+                                                            code={el.code}
+                                                            school_year={el.school_year}
+                                                            added_at={new Date(el.added_at).toLocaleDateString('en-GB')}
+                                                        />
+                                                    </Card>
                                                 </div>
                                             </div>
                                         ))
@@ -228,6 +275,29 @@ const CoursesContent = () => {
                     )
                 }              
             </div>
+
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title" className="text-danger">
+                    {"Etes vous sur de vouloir supprimer?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Vous etes sur le point de supprimer {selectedCourses.length} cours. Cette action est irreversible. Voulez vous tout de meme continuer?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Confirmer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

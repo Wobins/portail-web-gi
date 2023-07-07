@@ -6,14 +6,12 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    IconButton,
     Divider,
     Button, 
     Box, 
     TextField, 
     CircularProgress 
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid } from '@mui/x-data-grid';
 import { Auth } from 'aws-amplify';
 import { addCompany, getCompanies, deleteCompany } from '../../api/companyAPI';
@@ -34,59 +32,14 @@ const EnterprisesContent = () => {
     });
     const [admin, setAdmin] = useState(null);
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
-    const [toDelete, setToDelete] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    // const ConfirmationDialog = () => {
-    //     const confirmationModal = useRef();
-    //     const [openDialog, setOpenDialog] = useState(false);
-    //     const [showAlert, setShowAlert] = useState(false)
-
-    //     const handleOpenDialog = () => {
-    //         setOpenDialog(true);
-    //     };
-    //     const handleCloseDialog = () => {
-    //         setRowSelectionModel([]);
-    //         setToDelete(false);
-    //         setOpenDialog(false);
-    //     }
-    //     const handleConfirmDelete = () => {
-    //         rowSelectionModel.forEach(companyIdToDelete => {
-    //             deleteCompany(companyIdToDelete)
-    //                 .then((res) => {
-    //                     console.log(res);
-    //                 })       
-    //         });
-    //     }
-
-    //     return (
-    //         <Dialog open={openDialog} ref={confirmationModal} >
-    //             <DialogTitle className='border-bottom mb-3'>
-    //                 Confirmation
-    //                 <IconButton
-    //                     aria-label="close"
-    //                     onClick={handleCloseDialog}
-    //                     sx={{
-    //                         position: 'absolute',
-    //                         right: 8,
-    //                         top: 8,
-    //                         color: (theme) => theme.palette.grey[500],
-    //                     }}
-    //                 >
-    //                     <CloseIcon />
-    //                 </IconButton>
-    //             </DialogTitle>
-    //             <DialogContent>
-    //                 <DialogContentText>
-    //                     {`Vous etes sur le point de supprimer ${rowSelectionModel.length} elements. Veuillez confirmer en cliquant sur le bouton Supprimer`}
-    //                 </DialogContentText>
-    //             </DialogContent>
-    //             <DialogActions>
-    //                 <Button onClick={handleCloseDialog} variant='outlined' color='warning'>Annuler</Button>
-    //                 <Button variant='contained' color='error'  onClick={handleConfirmDelete}>Supprimer</Button>
-    //             </DialogActions>
-    //         </Dialog>
-    //     );
-    // }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Function to check if a user is logged in
     const checkUserLoggedIn = async () => {
@@ -97,7 +50,6 @@ const EnterprisesContent = () => {
             console.log('No user logged in');
         }
     };
-
     
     const handleAddBtn = () => {
         setShowForm(true);
@@ -111,6 +63,21 @@ const EnterprisesContent = () => {
             email: "",
             website: ""
         });
+    }
+
+    const handleDelete = () => {
+        rowSelectionModel.map(companyId => {
+            deleteCompany(companyId)
+                .then(() => {
+                    setCompanies(prevItems => prevItems.filter(item => item.id !== companyId));
+                    setRowSelectionModel(prevItems => prevItems.filter(item => item.id !== companyId));
+                })
+                .catch(error => {
+                    console.error('Error deleting item:', error);
+                });
+            return "OK without problem";
+        });
+        setOpen(false);
     }
 
     const handleChange = e => {
@@ -135,9 +102,6 @@ const EnterprisesContent = () => {
             console.error('Error updating item:', error);
         }
     }
-    const handleDelete = () => {
-        rowSelectionModel.length > 0 && setToDelete(true);
-    }
 
     // Fetch companies
     const fetchCompanies = async () => {
@@ -161,7 +125,12 @@ const EnterprisesContent = () => {
     }, [showForm, companies]);
 
     useEffect(() => {
-        checkUserLoggedIn();
+        const interval = setInterval(checkUserLoggedIn, 500);
+    
+        // Cleanup the interval when the component unmounts
+        return () => {
+          clearInterval(interval);
+        };
     }, []);
 
     return (
@@ -246,10 +215,23 @@ const EnterprisesContent = () => {
                             {
                                 admin &&
                                     <div className="text-end my-3">
-                                        <Button variant="contained" color="error" onClick={handleDelete} style={{textTransform: 'none'}}>
+                                        <Button 
+                                            variant="contained" 
+                                            color="error" 
+                                            onClick={handleClickOpen} 
+                                            style={{textTransform: 'none'}}
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Supprimer
                                         </Button>
-                                        <Button variant="contained" color="success" onClick={handleAddBtn} style={{textTransform: 'none'}} className='ms-2'>
+                                        <Button 
+                                            variant="contained" 
+                                            color="success" 
+                                            onClick={handleAddBtn} 
+                                            style={{textTransform: 'none'}} 
+                                            className='ms-2'
+                                            disabled={isLoading ? true : false}
+                                        >
                                             Ajouter
                                         </Button>
                                     </div>
@@ -284,8 +266,28 @@ const EnterprisesContent = () => {
                     )
                 }              
             </div>
-            {/* {toDelete && <ConfirmationDialog />} */}
-
+            
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Etes vous sur de vouloir supprimer?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Vous etes sur le point de supprimer {rowSelectionModel.length} entreprises du systeme. Cette action est irreversible. Voulez vous tout de meme continuer?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Confirmer
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

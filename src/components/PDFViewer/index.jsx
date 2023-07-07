@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-    Card, 
     CardMedia, 
     CardContent,
     Typography,
@@ -30,7 +29,7 @@ const PDFViewer = ({url, code, label, school_year, added_at}) => {
     }
 
     return (
-        <Card sx={{maxWidth: 350,}} className='shadow-md mt-3'>
+        <>
             <CardMedia className='container' component={Link} to={url}>
                 <Document
                     className='container'
@@ -55,7 +54,7 @@ const PDFViewer = ({url, code, label, school_year, added_at}) => {
                 </Typography>
                 </div>
             </CardContent>
-        </Card>
+        </>
     );
 };
 

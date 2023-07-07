@@ -8,3 +8,12 @@ export function getCommunications () {
         }
     });
 }
+
+export function deleteCommunication (id) {
+    return axios.delete(`${url}/communications/${id}`, {
+        headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Origin': '*'
+        }
+    });
+}
