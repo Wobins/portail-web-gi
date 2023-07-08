@@ -15,10 +15,11 @@ import {
 } from '@mui/material';
 import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
-import { Auth } from 'aws-amplify';
+import { Auth, Amplify, Storage } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
 import { getCourses, deleteCourse } from '../../api/courseAPI';
+
 
 const CoursesContent = () => {
     const [showForm, setShowForm] = useState(false);
@@ -45,7 +46,6 @@ const CoursesContent = () => {
         key: "courses/my-file.pdf",
         });
 
-        console.log(response);
     };
 
     const handleCheckboxSelection = (element) => {
@@ -99,7 +99,6 @@ const CoursesContent = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setShowForm(false);
-        console.log("hello from courses");
     }
     const fetchCourses = async () => {
         const res = await getCourses();
@@ -113,7 +112,6 @@ const CoursesContent = () => {
         const get_courses = async () => {
             const courses = await fetchCourses();
             setCourses(courses);
-            console.log(courses)
             setIsLoading(false);
         }
     
@@ -145,23 +143,27 @@ const CoursesContent = () => {
                                         noValidate
                                         autoComplete="off"
                                     >
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="codeEC" label="Code EC" placeholder='EC GL 123' />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="title" label="Intitule" />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="description" label="Annee academique" />
-                                        </div>
-                                        <div>
-                                            <input 
-                                                type="file" 
-                                                onChange={(event) => setFile(event.target.files[0])} 
-                                            />
-                                            <button onClick={handleUpload}>Upload</button>
-                                        </div>
-                                        {/* <div className="mb-3">
+                                        <TextField 
+                                            margin='normal' 
+                                            fullWidth 
+                                            id="codeEC" 
+                                            label="Code EC" 
+                                            placeholder='GL 123' 
+                                        />
+                                        <TextField 
+                                            margin='normal' 
+                                            fullWidth 
+                                            id="title" 
+                                            label="Intitule" 
+                                        />
+                                        <TextField 
+                                            margin='normal' 
+                                            fullWidth 
+                                            id="school-year" 
+                                            label="Annee academique" 
+                                            placeholder='2022/2023' 
+                                        />
+                                        <div className="my-3">
                                             <StorageManager
                                                 acceptedFileTypes={['.pdf']}
                                                 accessLevel="public"
@@ -175,9 +177,8 @@ const CoursesContent = () => {
                                                       return `${count} documents téléversés`;
                                                     },
                                                 }}
-                                                onUploadStart={handleUpload}
                                             />
-                                        </div> */}
+                                        </div>
                                         <div className="row">
                                             <div className="col-6"> 
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>
@@ -208,7 +209,7 @@ const CoursesContent = () => {
                                             color="error" 
                                             style={{textTransform: 'none'}}
                                             onClick={handleClickOpen}
-                                            disabled={isLoading ? true : false}
+                                            disabled={isLoading || courses.length === 0 ? true : false}
                                         >
                                             Supprimer
                                         </Button>

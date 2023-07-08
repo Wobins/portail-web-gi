@@ -80,13 +80,16 @@ const PressReleasesContent = () => {
             deleteCommunication(comId)
                 .then(() => {
                     setCommunications(prevItems => prevItems.filter(item => item.id !== comId));
-                    setSelectedCommunications(prevItems => prevItems.filter(item => item.id !== comId));
+                    console.log(selectedCommunications)
+                    console.log(communications)
+                    // setSelectedCommunications(prevItems => prevItems.filter(item => item.id !== comId));
                 })
                 .catch(error => {
                     console.error('Error deleting item:', error);
                 });
             return "OK without problem";
         });
+        setSelectedCommunications([]);
         setOpen(false);
     }
 
@@ -104,7 +107,7 @@ const PressReleasesContent = () => {
         }
     
         get_communications();
-    }, []);
+    }, [showForm]);
 
     useEffect(() => {
         const interval = setInterval(checkUserLoggedIn, 1000);
@@ -131,21 +134,24 @@ const PressReleasesContent = () => {
                                         noValidate
                                         autoComplete="off"
                                     >
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="codeEC" label="Code EC" placeholder='EC GL 123' />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="title" label="Intitule" />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField fullWidth id="description" label="Annee academique" />
-                                        </div>
-                                        <div className="mb-3">
+                                        <TextField 
+                                            fullWidth 
+                                            margin='normal'
+                                            id="title" 
+                                            label="Intitule"
+                                        />
+                                        <TextField 
+                                            fullWidth 
+                                            margin='normal'
+                                            id="school-year" 
+                                            label="Annee academique" 
+                                        />
+                                        <div className="my-3">
                                             <StorageManager
-                                                acceptedFileTypes={['.doc', '.docx', '.pdf', '.xls']}
+                                                acceptedFileTypes={['.pdf']}
                                                 accessLevel="public"
                                                 maxFileCount={1}
-                                                path='/pres-releases'
+                                                path='press-releases/'
                                                 displayText={{
                                                     dropFilesText: 'Porter et deposer ici ou',
                                                     browseFilesText: 'Ouvrir l\'explorateur',
@@ -185,7 +191,7 @@ const PressReleasesContent = () => {
                                             variant="contained" 
                                             color="error" 
                                             style={{textTransform: 'none'}}
-                                            disabled={isLoading ? true : false}
+                                            disabled={isLoading || communications.length === 0 ? true : false}
                                             onClick={handleClickOpen}
                                         >
                                             Supprimer
