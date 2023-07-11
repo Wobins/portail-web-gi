@@ -209,7 +209,9 @@ const CoursesContent = () => {
                                             color="error" 
                                             style={{textTransform: 'none'}}
                                             onClick={handleClickOpen}
-                                            disabled={isLoading || courses.length === 0 ? true : false}
+                                            disabled={
+                                                isLoading || courses.length === 0 || selectedCourses.length ? true : false
+                                            }
                                         >
                                             Supprimer
                                         </Button>

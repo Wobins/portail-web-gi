@@ -258,7 +258,9 @@ const TeachersContent = () => {
                                             color="error" 
                                             onClick={handleClickOpen} 
                                             style={{textTransform: 'none'}}
-                                            disabled={isLoading ? true : false}
+                                            disabled={
+                                                isLoading || rowSelectionModel.length === 0 || teachers.length === 0 ? true : false
+                                            }
                                         >
                                             Supprimer
                                         </Button>

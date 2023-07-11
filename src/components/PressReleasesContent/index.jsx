@@ -191,7 +191,9 @@ const PressReleasesContent = () => {
                                             variant="contained" 
                                             color="error" 
                                             style={{textTransform: 'none'}}
-                                            disabled={isLoading || communications.length === 0 ? true : false}
+                                            disabled={
+                                                isLoading || communications.length === 0 || selectedCommunications.length === 0 ? true : false
+                                            }
                                             onClick={handleClickOpen}
                                         >
                                             Supprimer

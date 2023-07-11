@@ -220,7 +220,9 @@ const EnterprisesContent = () => {
                                             color="error" 
                                             onClick={handleClickOpen} 
                                             style={{textTransform: 'none'}}
-                                            disabled={isLoading ? true : false}
+                                            disabled={
+                                                isLoading || companies.length === 0 || rowSelectionModel.length === 0 ? true : false
+                                            }
                                         >
                                             Supprimer
                                         </Button>
