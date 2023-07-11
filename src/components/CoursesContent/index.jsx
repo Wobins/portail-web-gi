@@ -210,7 +210,7 @@ const CoursesContent = () => {
                                             style={{textTransform: 'none'}}
                                             onClick={handleClickOpen}
                                             disabled={
-                                                isLoading || courses.length === 0 || selectedCourses.length ? true : false
+                                                isLoading || courses.length === 0 || selectedCourses.length === 0 ? true : false
                                             }
                                         >
                                             Supprimer
