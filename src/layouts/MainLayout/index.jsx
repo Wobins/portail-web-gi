@@ -284,11 +284,14 @@ const MainLayout = (props) => {
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-                                        {loggedInOptions.map((setting) => (
+                                        {/* {loggedInOptions.map((setting) => (
                                             <MenuItem key={setting} onClick={signOut}>
                                                 <Typography textAlign="center">{setting}</Typography>
                                             </MenuItem>
-                                        ))}
+                                        ))} */}
+                                        <MenuItem  onClick={signOut}>
+                                            <Typography textAlign="center">Déconnexion</Typography>
+                                        </MenuItem>
                                     </Menu>
                                 : 
                                     <Menu
@@ -328,7 +331,7 @@ const MainLayout = (props) => {
                             }}
                         >
                             <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
+                                <ChevronLeftIcon />
                             </IconButton>
                         </Toolbar>
                         <Divider />
