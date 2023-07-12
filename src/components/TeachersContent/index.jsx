@@ -204,7 +204,7 @@ const TeachersContent = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="mb-3">
+                                        {/* <div className="mb-3">
                                             <FormControl>
                                                 <FormLabel id="demo-row-radio-buttons-group-label">
                                                     Chef de departement
@@ -227,7 +227,7 @@ const TeachersContent = () => {
                                                     />
                                                 </RadioGroup>
                                             </FormControl>
-                                        </div>
+                                        </div> */}
                                         <div className="row">
                                             <div className="col-6">                    
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>

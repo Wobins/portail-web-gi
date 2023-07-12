@@ -4,7 +4,7 @@ const teachersColumns = [
     {field: 'phone', headerName: 'Telephone', width: 250},
     { field: 'email', headerName: 'Email', width: 250 },
     {field: 'status', headerName: 'Fonction', width: 250},
-    {field: 'isManager', headerName: 'Chef de departement', width: 200},
+    // {field: 'isManager', headerName: 'Chef de departement', width: 200},
 ];
 
 export default teachersColumns;

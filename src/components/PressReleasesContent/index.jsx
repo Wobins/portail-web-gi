@@ -138,13 +138,13 @@ const PressReleasesContent = () => {
                                             fullWidth 
                                             margin='normal'
                                             id="title" 
-                                            label="Intitule"
+                                            label="Sujet"
                                         />
                                         <TextField 
                                             fullWidth 
                                             margin='normal'
                                             id="school-year" 
-                                            label="Annee academique" 
+                                            label="Année academique" 
                                         />
                                         <div className="my-3">
                                             <StorageManager
@@ -153,7 +153,7 @@ const PressReleasesContent = () => {
                                                 maxFileCount={1}
                                                 path='press-releases/'
                                                 displayText={{
-                                                    dropFilesText: 'Porter et deposer ici ou',
+                                                    dropFilesText: 'Porter et déposer ici ou',
                                                     browseFilesText: 'Ouvrir l\'explorateur',
                                                     getFilesUploadedText(count) {
                                                       return `${count} documents téléversés`;

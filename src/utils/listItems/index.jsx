@@ -29,7 +29,7 @@ export const listItems = (
     <ListItemLink to="/cours" primary="Cours" icon={<School />} />
     <ListItemLink to="/enseignants" primary="Enseignants" icon={<People />} />
     {/* <ListItemLink to="/lexique" primary="Lexique" icon={<Bookmarks />} /> */}
-    <ListItemLink to="/communiques" primary="Communiques" icon={<LibraryBooks />} />
+    <ListItemLink to="/communiques" primary="Communiqués" icon={<LibraryBooks />} />
     <ListItemLink to="/entreprises" primary="Entreprises" icon={<Badge />} />
   </>
 );

@@ -251,10 +251,10 @@ const EnterprisesContent = () => {
                                         columns={companiesColumns}
                                         initialState={{
                                             pagination: {
-                                                paginationModel: { page: 0, pageSize: 25 },
+                                                paginationModel: { page: 0, pageSize: 5 },
                                             },
                                         }}
-                                        pageSizeOptions={[10, 15, 20, 25]}
+                                        pageSizeOptions={[5, 10, 15, 20, 25]}
                                         checkboxSelection = {admin ? true : false}
                                         onRowSelectionModelChange={(newRowSelectionModel) => {
                                             setRowSelectionModel(newRowSelectionModel);
