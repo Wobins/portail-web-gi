@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
-import { Auth, Amplify, Storage } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
 import { getCourses, deleteCourse } from '../../api/courseAPI';
@@ -27,7 +27,6 @@ const CoursesContent = () => {
     const [query, setQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [admin, setAdmin] = useState(null);
-    const [file, setFile] = useState();
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [open, setOpen] = useState(false);
 
@@ -36,16 +35,6 @@ const CoursesContent = () => {
     };
     const handleClose = () => {
         setOpen(false);
-    };
-
-    const handleUpload = async () => {
-        const { uploadFile } = await StorageManager.getInstance();
-        const response = await uploadFile({
-        file: file,
-        bucket: "tutorial-project-iut",
-        key: "courses/my-file.pdf",
-        });
-
     };
 
     const handleCheckboxSelection = (element) => {
@@ -80,13 +69,13 @@ const CoursesContent = () => {
             deleteCourse(courseId)
                 .then(() => {
                     setCourses(prevItems => prevItems.filter(item => item.id !== courseId));
-                    setSelectedCourses(prevItems => prevItems.filter(item => item.id !== courseId));
                 })
                 .catch(error => {
                     console.error('Error deleting item:', error);
                 });
             return "OK without problem";
         });
+        setSelectedCourses([]);
         setOpen(false);
     }
 
@@ -116,7 +105,7 @@ const CoursesContent = () => {
         }
     
         get_courses();
-    }, []);
+    }, [showForm]);
 
     useEffect(() => {
         const interval = setInterval(checkUserLoggedIn, 500);
@@ -144,21 +133,21 @@ const CoursesContent = () => {
                                         autoComplete="off"
                                     >
                                         <TextField 
+                                            fullWidth required
                                             margin='normal' 
-                                            fullWidth 
                                             id="codeEC" 
                                             label="Code EC" 
                                             placeholder='GL 123' 
                                         />
                                         <TextField 
+                                            fullWidth required
                                             margin='normal' 
-                                            fullWidth 
                                             id="title" 
                                             label="Intitule" 
                                         />
                                         <TextField 
+                                            fullWidth required
                                             margin='normal' 
-                                            fullWidth 
                                             id="school-year" 
                                             label="Annee academique" 
                                             placeholder='2022/2023' 

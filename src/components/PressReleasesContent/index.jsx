@@ -80,9 +80,6 @@ const PressReleasesContent = () => {
             deleteCommunication(comId)
                 .then(() => {
                     setCommunications(prevItems => prevItems.filter(item => item.id !== comId));
-                    console.log(selectedCommunications)
-                    console.log(communications)
-                    // setSelectedCommunications(prevItems => prevItems.filter(item => item.id !== comId));
                 })
                 .catch(error => {
                     console.error('Error deleting item:', error);
@@ -135,13 +132,13 @@ const PressReleasesContent = () => {
                                         autoComplete="off"
                                     >
                                         <TextField 
-                                            fullWidth 
+                                            fullWidth required 
                                             margin='normal'
                                             id="title" 
                                             label="Sujet"
                                         />
                                         <TextField 
-                                            fullWidth 
+                                            fullWidth required
                                             margin='normal'
                                             id="school-year" 
                                             label="Année academique" 

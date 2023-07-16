@@ -153,29 +153,27 @@ const TeachersContent = () => {
                                         onSubmit={handleSubmit}
                                         autoComplete="off"
                                     >
+                                        <TextField 
+                                            fullWidth required
+                                            margin='normal' 
+                                            id="fullName" 
+                                            name="name" 
+                                            label="Nom complet" 
+                                            value={teachersData.name}
+                                            onChange={handleChange}
+                                        />
+                                        <TextField 
+                                            fullWidth required 
+                                            margin='normal'
+                                            id="email" 
+                                            name="email"
+                                            label="Email" 
+                                            type='email' 
+                                            value={teachersData.email} 
+                                            onChange={handleChange}
+                                        />
                                         <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="fullName" 
-                                                name="name" 
-                                                label="Nom complet" 
-                                                value={teachersData.name}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="email" 
-                                                name="email"
-                                                label="Email" 
-                                                type='email' 
-                                                value={teachersData.email} 
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <FormControl fullWidth>
+                                            <FormControl fullWidth required>
                                                 <InputLabel id="status">Statut</InputLabel>
                                                 <Select
                                                     labelId="status"
@@ -193,42 +191,17 @@ const TeachersContent = () => {
                                                 </Select>
                                             </FormControl>
                                         </div>
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="phone" 
-                                                name='phone'
-                                                type='phone' 
-                                                label="Telephone" 
-                                                value={teachersData.phone}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        {/* <div className="mb-3">
-                                            <FormControl>
-                                                <FormLabel id="demo-row-radio-buttons-group-label">
-                                                    Chef de departement
-                                                </FormLabel>
-                                                <RadioGroup
-                                                    row
-                                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                                    name="row-radio-buttons-group"
-                                                    value={teachersData.isManager}
-                                                >
-                                                    <FormControlLabel 
-                                                        value={true} 
-                                                        control={<Radio />} 
-                                                        label="Oui" 
-                                                    />
-                                                    <FormControlLabel 
-                                                        value={false} 
-                                                        control={<Radio />} 
-                                                        label="Non" 
-                                                    />
-                                                </RadioGroup>
-                                            </FormControl>
-                                        </div> */}
-                                        <div className="row">
+                                        <TextField 
+                                            fullWidth required
+                                            margin='normal'
+                                            id="phone" 
+                                            name='phone'
+                                            type='phone' 
+                                            label="Telephone" 
+                                            value={teachersData.phone}
+                                            onChange={handleChange}
+                                        />
+                                        <div className="row my-3">
                                             <div className="col-6">                    
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>
                                                     Annuler

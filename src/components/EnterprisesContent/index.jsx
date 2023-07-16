@@ -147,51 +147,47 @@ const EnterprisesContent = () => {
                                     <Box
                                         component="form"
                                         onSubmit={handleSubmit}
-                                        noValidate
+                                        // noValidate
                                         autoComplete="off"
                                     >
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="name" 
-                                                name="name" 
-                                                label="Nom de l'entreprise" 
-                                                value={companyData.name}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="industry" 
-                                                name="industry" 
-                                                label="Secteur" 
-                                                value={companyData.industry}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="email" 
-                                                name="email" 
-                                                type='email' 
-                                                label="Email" 
-                                                value={companyData.email}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <TextField 
-                                                fullWidth 
-                                                id="website" 
-                                                name="website" 
-                                                label="Site web" 
-                                                value={companyData.website}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="row">
+                                        <TextField 
+                                            fullWidth required
+                                            margin="normal"                                            
+                                            id="name" 
+                                            name="name" 
+                                            label="Nom de l'entreprise" 
+                                            value={companyData.name}
+                                            onChange={handleChange}
+                                        />
+                                        <TextField 
+                                            fullWidth required
+                                            margin="normal"
+                                            id="industry" 
+                                            name="industry" 
+                                            label="Secteur" 
+                                            value={companyData.industry}
+                                            onChange={handleChange}
+                                        />
+                                        <TextField 
+                                            fullWidth required
+                                            margin="normal" 
+                                            id="email" 
+                                            name="email" 
+                                            type='email' 
+                                            label="Email" 
+                                            value={companyData.email}
+                                            onChange={handleChange}
+                                        />
+                                        <TextField 
+                                            fullWidth required
+                                            margin="normal"
+                                            id="website" 
+                                            name="website" 
+                                            label="Site web" 
+                                            value={companyData.website}
+                                            onChange={handleChange}
+                                        />
+                                        <div className="row my-3">
                                             <div className="col-6">                    
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>
                                                     Annuler
