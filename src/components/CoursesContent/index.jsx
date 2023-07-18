@@ -16,9 +16,10 @@ import {
 import { SearchField, } from '@aws-amplify/ui-react';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { Auth } from 'aws-amplify';
+import generateUniqueId from '../../utils/generateUniqueId';
 import PDFViewer from '../PDFViewer';
 import searchArray from '../../utils/searchArray';
-import { getCourses, deleteCourse } from '../../api/courseAPI';
+import { getCourses, deleteCourse, addCourse } from '../../api/courseAPI';
 
 
 const CoursesContent = () => {
@@ -29,6 +30,12 @@ const CoursesContent = () => {
     const [admin, setAdmin] = useState(null);
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [open, setOpen] = useState(false);
+    const [courseData, setCourseData] = useState({
+        id: generateUniqueId(),
+        label: "",
+        code: "",
+        school_year: ""
+    });
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -63,7 +70,7 @@ const CoursesContent = () => {
     const onClear = () => {
       setQuery('');
     };
-
+    
     const handleDelete = () => {
         selectedCourses.map(courseId => {
             deleteCourse(courseId)
@@ -85,9 +92,27 @@ const CoursesContent = () => {
     const handleUndoBtn = () => {
         setShowForm(false);
     }
-    const handleSubmit = (e) => {
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setCourseData({ ...courseData, [name]: value });
+    }
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setShowForm(false);
+        try {
+            console.log(courseData);
+            const res = await addCourse(courseData);
+            const { data } = res;
+            console.log(data);
+            setShowForm(false);
+            setCourseData({
+                id: generateUniqueId(),
+                label: "",
+                code: "",
+                school_year: ""
+            });
+        } catch (error) {
+            console.error('Error creating course:', error);
+        }
     }
     const fetchCourses = async () => {
         const res = await getCourses();
@@ -105,7 +130,7 @@ const CoursesContent = () => {
         }
     
         get_courses();
-    }, [showForm]);
+    }, [showForm, courses]);
 
     useEffect(() => {
         const interval = setInterval(checkUserLoggedIn, 500);
@@ -129,46 +154,60 @@ const CoursesContent = () => {
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
                                         component="form"
-                                        noValidate
+                                        // noValidate
                                         autoComplete="off"
+                                        onSubmit={handleSubmit}
                                     >
                                         <TextField 
                                             fullWidth required
                                             margin='normal' 
-                                            id="codeEC" 
+                                            id="code" 
+                                            name='code'
                                             label="Code EC" 
+                                            value={courseData.code}
                                             placeholder='GL 123' 
+                                            onChange={handleChange}
                                         />
                                         <TextField 
                                             fullWidth required
                                             margin='normal' 
-                                            id="title" 
+                                            id="label" 
+                                            name='label'
                                             label="Intitule" 
+                                            value={courseData.label}
+                                            onChange={handleChange}
                                         />
                                         <TextField 
                                             fullWidth required
                                             margin='normal' 
-                                            id="school-year" 
+                                            id="school_year" 
+                                            name='school_year'
                                             label="Annee academique" 
-                                            placeholder='2022/2023' 
+                                            value={courseData.school_year}
+                                            placeholder='2022/2023'
+                                            onChange={handleChange} 
                                         />
-                                        <div className="my-3">
-                                            <StorageManager
-                                                acceptedFileTypes={['.pdf']}
-                                                accessLevel="public"
-                                                maxFileCount={1}
-                                                path='courses/'
-                                                isResumable
-                                                displayText={{
-                                                    dropFilesText: 'Porter et deposer ici ou',
-                                                    browseFilesText: 'Ouvrir l\'explorateur',
-                                                    getFilesUploadedText(count) {
-                                                      return `${count} documents téléversés`;
-                                                    },
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="row">
+                                        {
+                                            (courseData.label !== "" & courseData.school_year !== "" & courseData.code !== "") ? (
+                                                <div className="my-3">
+                                                    <StorageManager
+                                                        acceptedFileTypes={['.pdf']}
+                                                        accessLevel="public"
+                                                        maxFileCount={1}
+                                                        path='courses/'
+                                                        isResumable
+                                                        displayText={{
+                                                            dropFilesText: 'Porter et deposer ici ou',
+                                                            browseFilesText: 'Ouvrir l\'explorateur',
+                                                            getFilesUploadedText(count) {
+                                                            return `${count} documents téléversés`;
+                                                            },
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (<></>)
+                                        }
+                                        <div className="row my-3">
                                             <div className="col-6"> 
                                                 <Button variant="outlined" color="error" onClick={handleUndoBtn}>
                                                     Annuler
@@ -178,7 +217,7 @@ const CoursesContent = () => {
                                                 <Button 
                                                     variant='contained' 
                                                     type='submit'
-                                                    onClick={handleSubmit}
+                                                    // disabled={courseData.label === "" & courseData.school_year === "" & courseData.code === "" ? false : true}
                                                 >
                                                     Enregistrer
                                                 </Button>

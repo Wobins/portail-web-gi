@@ -17,3 +17,12 @@ export function deleteCommunication (id) {
         }
     });
 }
+
+export function addCommunication (com) {
+    return axios.post(`${url}/communications/`, com, {
+        headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Origin': '*'
+        }
+    });
+}

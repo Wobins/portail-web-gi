@@ -17,7 +17,8 @@ import { StorageManager } from '@aws-amplify/ui-react-storage';
 import { SearchField } from '@aws-amplify/ui-react';
 import { Auth } from 'aws-amplify';
 import PDFViewer from '../PDFViewer';
-import { getCommunications, deleteCommunication } from '../../api/pressAPI';
+import generateUniqueId from '../../utils/generateUniqueId';
+import { getCommunications, deleteCommunication, addCommunication } from '../../api/pressAPI';
 import searchArray from '../../utils/searchArray';
 
 
@@ -29,6 +30,11 @@ const PressReleasesContent = () => {
     const [admin, setAdmin] = useState(null);
     const [selectedCommunications, setSelectedCommunications] = useState([]);
     const [open, setOpen] = useState(false);
+    const [comData, setComData] = useState({
+        id: generateUniqueId(),
+        school_year: "",
+        label: ""
+    });
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -70,10 +76,26 @@ const PressReleasesContent = () => {
     const handleUndoBtn = () => {
         setShowForm(false);
     }
-    const handleSubmit = (e) => {
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setComData({ ...comData, [name]: value });
+    }
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setShowForm(false);
-        console.log("hello from communications");
+        try {
+            console.log(comData)
+            const res = await addCommunication(comData);
+            const { data } = res;
+            console.log(data);
+            setShowForm(false);
+            setComData({
+                id: generateUniqueId(),
+                school_year: "",
+                label: ""
+            });
+        } catch (error) {
+            console.error('Error addind press:', error);
+        }
     }
     const handleDelete = () => {
         selectedCommunications.map(comId => {
@@ -130,34 +152,45 @@ const PressReleasesContent = () => {
                                         component="form"
                                         noValidate
                                         autoComplete="off"
+                                        onSubmit={handleSubmit}
                                     >
                                         <TextField 
                                             fullWidth required 
                                             margin='normal'
+                                            value={comData.label}
                                             id="title" 
+                                            name='label'
                                             label="Sujet"
+                                            onChange={handleChange}
                                         />
                                         <TextField 
                                             fullWidth required
                                             margin='normal'
+                                            value={comData.school_year}
                                             id="school-year" 
+                                            name='school_year'
                                             label="Année academique" 
+                                            onChange={handleChange}
                                         />
-                                        <div className="my-3">
-                                            <StorageManager
-                                                acceptedFileTypes={['.pdf']}
-                                                accessLevel="public"
-                                                maxFileCount={1}
-                                                path='press-releases/'
-                                                displayText={{
-                                                    dropFilesText: 'Porter et déposer ici ou',
-                                                    browseFilesText: 'Ouvrir l\'explorateur',
-                                                    getFilesUploadedText(count) {
-                                                      return `${count} documents téléversés`;
-                                                    },
-                                                }}
-                                            />
-                                        </div>
+                                        {
+                                            (comData.label !== "" & comData.school_year !== "") ? (
+                                                <div className="my-3">
+                                                    <StorageManager
+                                                        acceptedFileTypes={['.pdf']}
+                                                        accessLevel="public"
+                                                        maxFileCount={1}
+                                                        path='press-releases/'
+                                                        displayText={{
+                                                            dropFilesText: 'Porter et déposer ici ou',
+                                                            browseFilesText: 'Ouvrir l\'explorateur',
+                                                            getFilesUploadedText(count) {
+                                                            return `${count} documents téléversés`;
+                                                            },
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (<></>)
+                                        }
                                         <div className="row">
                                             <div className="col-6">                    
                                             <Button variant="outlined" color="error" onClick={handleUndoBtn}>
@@ -166,10 +199,9 @@ const PressReleasesContent = () => {
                                             </div>
                                             <div className="col-6 text-end">
                                                 <Button 
-                                                    // fullWidth 
                                                     variant='contained' 
                                                     type='submit'
-                                                    onClick={handleSubmit}
+                                                    disabled={(comData.label !== "" & comData.school_year !== "") ? false : true}
                                                 >
                                                     Enregistrer
                                                 </Button>
