@@ -11,7 +11,7 @@ import {getCommunications} from '../../api/pressAPI';
 import BlockResource from '../BlockRessource';
 
 const HomeContent = () => {
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [courses, setCourses] = useState(null);
     const [teachers, setTeachers] = useState(null);
     const [companies, setCompanies] = useState(null);

@@ -113,9 +113,7 @@ const MainLayout = (props) => {
                     </DialogTitle>
                     <DialogContent>
                         <TextField
-                            autoFocus 
-                            // required 
-                            fullWidth
+                            autoFocus required fullWidth
                             margin="dense"
                             id="subscription-email"
                             label="Email"
@@ -199,6 +197,13 @@ const MainLayout = (props) => {
     React.useEffect(() => {
         checkUserLoggedIn();
     }, [showLogin]);
+
+    React.useEffect(() => {
+        const interval = setInterval(checkUserLoggedIn, 500);
+        return () => {
+          clearInterval(interval);
+        };
+    }, []);
 
     return (
         <>
@@ -313,6 +318,11 @@ const MainLayout = (props) => {
                     <Box
                         component="main"
                         className='page-container'
+                        sx={{
+                            // flexGrow: 1,
+                            // height: '100vh',
+                            overflow: 'auto',
+                        }}
                     >
                         <Toolbar />
                         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} className='pb-4 main-box'>
