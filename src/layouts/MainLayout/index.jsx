@@ -36,9 +36,7 @@ import SubscriptionDialog from '../../components/SubscriptionDialog';
 import { listItems } from '../../utils/listItems';
 import drawer from '../../utils/Drawer';
 import appBar from '../../utils/AppBar';
-
-const loggedOutOptions = ['Connexion'];
-const loggedInOptions = ['Parametres', 'Se deconnecter'];
+import './styles.css';
 
 
 const MainLayout = (props) => {
@@ -69,21 +67,6 @@ const MainLayout = (props) => {
             } catch (error) {
               console.log('error signing in', error);
             }
-    
-            // try {
-            //     const user = await Auth.signIn("azalyange19@gmail.com", "W@@v1904");
-                
-            //     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-            //       // Handle new password requirement
-            //       const newPassword = 'p@ssw0rd';
-            //       const updatedUser = await Auth.completeNewPassword(user, newPassword);
-            //       console.log('User signed in:', updatedUser.username);
-            //     } else {
-            //       console.log('User signed in:', user.username);
-            //     }
-            //   } catch (error) {
-            //     console.log('Error signing in:', error);
-            //   }
         }
     
         const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -129,10 +112,6 @@ const MainLayout = (props) => {
                         </IconButton>
                     </DialogTitle>
                     <DialogContent>
-                        {/* <DialogContentText>
-                            To subscribe to this website, please enter your email address here. We
-                            will send updates occasionally.
-                        </DialogContentText> */}
                         <TextField
                             autoFocus 
                             // required 
@@ -229,9 +208,7 @@ const MainLayout = (props) => {
 
                     <AppBar position="absolute" open={open}>
                         <Toolbar
-                            sx={{
-                            pr: '24px', // keep right padding when drawer closed
-                            }}
+                            sx={{pr: '24px',}}
                         >
                             <IconButton
                                 edge="start"
@@ -284,11 +261,6 @@ const MainLayout = (props) => {
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-                                        {/* {loggedInOptions.map((setting) => (
-                                            <MenuItem key={setting} onClick={signOut}>
-                                                <Typography textAlign="center">{setting}</Typography>
-                                            </MenuItem>
-                                        ))} */}
                                         <MenuItem  onClick={signOut}>
                                             <Typography textAlign="center">Déconnexion</Typography>
                                         </MenuItem>
@@ -310,11 +282,9 @@ const MainLayout = (props) => {
                                         open={Boolean(anchorElUser)}
                                         onClose={handleCloseUserMenu}
                                     >
-                                        {loggedOutOptions.map((setting) => (
-                                            <MenuItem key={setting} onClick={handleShowLoginForm}>
-                                                <Typography textAlign="center">{setting}</Typography>
-                                            </MenuItem>
-                                        ))}
+                                        <MenuItem onClick={handleShowLoginForm}>
+                                            <Typography textAlign="center">Connexion</Typography>
+                                        </MenuItem>
                                     </Menu>
 
                             }
@@ -342,18 +312,10 @@ const MainLayout = (props) => {
 
                     <Box
                         component="main"
-                        sx={{
-                        //     backgroundColor: (theme) =>
-                        //     theme.palette.mode === 'light'
-                        //         ? theme.palette.grey[100]
-                        //         : theme.palette.grey[900],
-                            flexGrow: 1,
-                            height: '100vh',
-                            overflow: 'auto',
-                        }}
+                        className='page-container'
                     >
                         <Toolbar />
-                        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} style={{flex: 1}}>
+                        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} className='pb-4 main-box'>
                             <SubscriptionDialog />
                             {showLogin && <LoginDialog />}
                             { component }
