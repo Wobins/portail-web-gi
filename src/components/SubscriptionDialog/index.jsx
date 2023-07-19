@@ -107,7 +107,7 @@ const SubscriptionDialog = () => {
             {
                 showAlert && (
                     <Alert severity="success" className='success-alert' onClose={() => setShowAlert(false)}>
-                      Form submitted successfully!
+                      Votre souscription a été effectuée avec succès!
                     </Alert>
                 )
             }

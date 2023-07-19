@@ -198,12 +198,12 @@ const MainLayout = (props) => {
         checkUserLoggedIn();
     }, [showLogin]);
 
-    React.useEffect(() => {
-        const interval = setInterval(checkUserLoggedIn, 500);
-        return () => {
-          clearInterval(interval);
-        };
-    }, []);
+    // React.useEffect(() => {
+    //     const interval = setInterval(checkUserLoggedIn, 500);
+    //     return () => {
+    //       clearInterval(interval);
+    //     };
+    // }, []);
 
     return (
         <>

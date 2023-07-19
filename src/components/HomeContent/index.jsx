@@ -46,7 +46,7 @@ const HomeContent = () => {
         }
     
         get_data();
-    }, [])
+    }, []);
 
     return (
         <>
