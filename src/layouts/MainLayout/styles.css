@@ -17,3 +17,17 @@
 hr {
     border-color: #545b64 !important;
 }
+
+.underline-middle {
+    display: inline-block;
+    position: relative;
+}
+
+.underline-middle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px; /* adjust this value to control the underline position */
+    width: 50%; /* adjust this value to control the underline length */
+    border-bottom: 5px solid #f09686; /* adjust the color and style as needed */
+}

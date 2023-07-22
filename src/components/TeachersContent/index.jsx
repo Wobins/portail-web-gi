@@ -139,8 +139,9 @@ const TeachersContent = () => {
 
     return (
         <>
-            <h1>Enseignants</h1>
-            <Divider />
+            <div className='mb-3 underline-middle'>
+                <h1>Enseignants</h1>
+            </div>
 
             <div className='mt-5' style={{ width: '100%' }}>
                 {

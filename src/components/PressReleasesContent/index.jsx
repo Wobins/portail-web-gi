@@ -139,8 +139,9 @@ const PressReleasesContent = () => {
 
     return (
         <>
-            <h1>Communiqués</h1>
-            <Divider />
+            <div className='mb-3 underline-middle'>
+                <h1>Communiqués</h1>
+            </div>
 
             <div className='mt-5' style={{ width: '100%' }}>
                 {

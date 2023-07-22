@@ -46,10 +46,8 @@ const CoursesContent = () => {
 
     const handleCheckboxSelection = (element) => {
         if (selectedCourses.includes(element)) {
-          // Si l'élément est déjà dans le tableau, on le retire
           setSelectedCourses(selectedCourses.filter(item => item !== element));
         } else {
-          // Sinon, on l'ajoute au tableau
           setSelectedCourses([...selectedCourses, element]);
         }
     };
@@ -143,8 +141,9 @@ const CoursesContent = () => {
 
     return (
         <>
-            <h1>Cours</h1>
-            <Divider />
+            <div className='mb-3 underline-middle'>
+                <h1>Cours</h1>
+            </div>
 
             <div className='mt-5' style={{ width: '100%' }}>
                 {
