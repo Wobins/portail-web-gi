@@ -20,6 +20,9 @@
           "bucketName": "tutorial-project-iut",
           "region": "us-east-1"
         }
+      },
+      "api": {
+        "portailgi": {}
       }
     }
   }
