@@ -20,10 +20,10 @@ const router = createBrowserRouter([
     path: "/cours",
     element: <Courses />,
   },
-  // {
-  //   path: "/lexique",
-  //   element: <Definitions />,
-  // },
+  {
+    path: "/definitions",
+    element: <Definitions />,
+  },
   // {
   //   path: "/lexique/:id",
   //   element: <Definition />,

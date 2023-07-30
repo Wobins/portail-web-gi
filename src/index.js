@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import awsconfig from './aws-exports';
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
-import awsconfig from './aws-exports';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@aws-amplify/ui-react/styles.css';
 
