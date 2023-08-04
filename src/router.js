@@ -5,7 +5,6 @@ import Courses from "./pages/Courses";
 import Definitions from "./pages/Definitions"
 import PressReleases from "./pages/PressReleases";
 import Enterprises from "./pages/Enterprises";
-import Definition from "./pages/Definition";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +23,6 @@ const router = createBrowserRouter([
     path: "/definitions",
     element: <Definitions />,
   },
-  // {
-  //   path: "/lexique/:id",
-  //   element: <Definition />,
-  // },
   {
     path: "/entreprises",
     element: <Enterprises />,

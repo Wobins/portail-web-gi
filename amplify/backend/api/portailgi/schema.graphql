@@ -2,4 +2,4 @@ type Definition @model @auth(rules: [{allow: public}]) {
   id: ID!
   term: String
   meaning: String
-}
+} 

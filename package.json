@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/api": "^5.3.5",
     "@aws-amplify/ui-react": "^4.6.4",
     "@aws-amplify/ui-react-storage": "^2.0.0",
     "@emailjs/browser": "^3.11.0",

@@ -62,8 +62,6 @@ const MainLayout = (props) => {
             try {
               const user = await Auth.signIn(loginData.email, loginData.password);
               const session = await Auth.currentSession();
-              console.log(user);
-              console.log(session);
             } catch (error) {
               console.log('error signing in', error);
             }

@@ -1,0 +1,226 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Definition @aws_api_key @aws_iam {
+  id: ID!
+  meaning: String
+  term: String
+  createdAt: AWSDateTime?
+  updatedAt: AWSDateTime?
+}
+
+type ModelDefinitionConnection @aws_api_key @aws_iam {
+  items: [Definition]!
+  nextToken: String
+}
+
+type Mutation {
+  createDefinition(condition: ModelDefinitionConditionInput, input: CreateDefinitionInput!): Definition @aws_api_key @aws_iam
+  deleteDefinition(condition: ModelDefinitionConditionInput, input: DeleteDefinitionInput!): Definition @aws_api_key @aws_iam
+  updateDefinition(condition: ModelDefinitionConditionInput, input: UpdateDefinitionInput!): Definition @aws_api_key @aws_iam
+}
+
+type Query {
+  getDefinition(id: ID!): Definition @aws_api_key @aws_iam
+  listDefinitions(filter: ModelDefinitionFilterInput, limit: Int, nextToken: String): ModelDefinitionConnection @aws_api_key @aws_iam
+}
+
+type Subscription {
+  onCreateDefinition(filter: ModelSubscriptionDefinitionFilterInput): Definition @aws_api_key @aws_iam @aws_subscribe(mutations : ["createDefinition"])
+  onDeleteDefinition(filter: ModelSubscriptionDefinitionFilterInput): Definition @aws_api_key @aws_iam @aws_subscribe(mutations : ["deleteDefinition"])
+  onUpdateDefinition(filter: ModelSubscriptionDefinitionFilterInput): Definition @aws_api_key @aws_iam @aws_subscribe(mutations : ["updateDefinition"])
+}
+
+enum ModelAttributeTypes {
+  _null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+input CreateDefinitionInput {
+  id: ID
+  meaning: String
+  term: String
+}
+
+input DeleteDefinitionInput {
+  id: ID!
+}
+
+input ModelBooleanInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelDefinitionConditionInput {
+  and: [ModelDefinitionConditionInput]
+  meaning: ModelStringInput
+  not: ModelDefinitionConditionInput
+  or: [ModelDefinitionConditionInput]
+  term: ModelStringInput
+}
+
+input ModelDefinitionFilterInput {
+  and: [ModelDefinitionFilterInput]
+  id: ModelIDInput
+  meaning: ModelStringInput
+  not: ModelDefinitionFilterInput
+  or: [ModelDefinitionFilterInput]
+  term: ModelStringInput
+}
+
+input ModelFloatInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+}
+
+input ModelIDInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelStringInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionBooleanInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelSubscriptionDefinitionFilterInput {
+  and: [ModelSubscriptionDefinitionFilterInput]
+  id: ModelSubscriptionIDInput
+  meaning: ModelSubscriptionStringInput
+  or: [ModelSubscriptionDefinitionFilterInput]
+  term: ModelSubscriptionStringInput
+}
+
+input ModelSubscriptionFloatInput {
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  in: [Float]
+  le: Float
+  lt: Float
+  ne: Float
+  notIn: [Float]
+}
+
+input ModelSubscriptionIDInput {
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  in: [ID]
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  notIn: [ID]
+}
+
+input ModelSubscriptionIntInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  in: [Int]
+  le: Int
+  lt: Int
+  ne: Int
+  notIn: [Int]
+}
+
+input ModelSubscriptionStringInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  in: [String]
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  notIn: [String]
+}
+
+input UpdateDefinitionInput {
+  id: ID!
+  meaning: String
+  term: String
+}

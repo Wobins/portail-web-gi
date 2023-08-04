@@ -110,9 +110,6 @@ const EnterprisesContent = () => {
         return data;
     }
     
-    useEffect(() => {
-        document.title = "Entreprises";
-    }, []);
 
     useEffect(() => {
         const get_companies = async () => {
