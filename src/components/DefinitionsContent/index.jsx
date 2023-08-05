@@ -117,11 +117,6 @@ const DefinitionsContent = () => {
                 {
                     showForm ? (
                         <>
-                            <div className=" my-3">
-                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
-                                    Annuler
-                                </Button>
-                            </div>
                             <div className="row">
                                 <div className="col-lg-6 offset-lg-3">
                                     <Box
@@ -148,13 +143,21 @@ const DefinitionsContent = () => {
                                             value={formData.meaning}
                                             onChange={handleChange}
                                         />
-                                        <Button 
-                                            fullWidth 
-                                            variant='contained' 
-                                            type='submit'
-                                        >
-                                            Enregistrer
-                                        </Button>
+                                        <div className="row my-3">
+                                            <div className="col-6">                    
+                                                <Button variant="outlined" color="error" onClick={handleUndoBtn}>
+                                                    Annuler
+                                                </Button>
+                                            </div>
+                                            <div className="col-6 text-end">
+                                                <Button 
+                                                    variant='contained' 
+                                                    type='submit'
+                                                >
+                                                    Enregistrer
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </Box>
                                 </div>
                             </div>
